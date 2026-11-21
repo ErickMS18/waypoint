@@ -1,0 +1,132 @@
+# {{ "Relatório de mercado" if public else "Relatório Rota" }} — {{ stamp }}
+
+**{{ numbers.n_jobs }} vagas** de {{ numbers.n_companies }} empresas · fontes: {{ numbers.sources | join(", ") }} ·
+publicadas entre {{ date_min }} e {{ date_max }} · extração: `{{ extractor_model }}`
+
+| Região | Vagas |
+|---|---:|
+{% for k, v in numbers.by_region.items() %}
+| {{ k }} | {{ v }} |
+{% endfor %}
+
+{% for rid, tbl in tables.items() %}
+{% set r = numbers.roles[rid] %}
+## {{ r.label }} — {{ r.n_jobs }} vagas
+
+{% if charts.get("chart_" ~ rid) %}
+![Top skills]({{ charts["chart_" ~ rid] }})
+{% endif %}
+
+| # | Skill | Em % das vagas | Obrigatória | Diferencial |
+|---:|---|---:|---:|---:|
+{% for row in tbl.itertuples() %}
+| {{ loop.index }} | {{ row.name }} | {{ row.share_any | pct }} | {{ row.share_required | pct }} | {{ row.share_nice | pct }} |
+{% endfor %}
+
+- Vagas de nível júnior/estágio: **{{ r.entry_pct }}%** · sênior ou acima: **{{ r.senior_or_above_pct }}%**
+- Inglês listado como obrigatório: **{{ r.english_required_pct }}%**
+
+{% endfor %}
+## Senioridade
+
+| Nível | Vagas | % |
+|---|---:|---:|
+{% for row in seniority.itertuples() %}
+| {{ SENIORITY_PT.get(row.seniority, row.seniority) }} | {{ row.n }} | {{ row.share | pct }} |
+{% endfor %}
+
+{% if region_cmp is not none and not region_cmp.empty %}
+## Brasil × remoto internacional (% das vagas que citam a skill)
+
+| Skill |{% for c in region_cmp.columns if not c.startswith("n_") and c not in ("skill_id", "name") %} {{ REGION_PT.get(c, c) }} (n={{ region_cmp["n_" ~ c].iloc[0] }}) |{% endfor %}
+
+|---|{% for c in region_cmp.columns if not c.startswith("n_") and c not in ("skill_id", "name") %}---:|{% endfor %}
+
+{% for _, row in region_cmp.iterrows() %}
+| {{ row["name"] }} |{% for c in region_cmp.columns if not c.startswith("n_") and c not in ("skill_id", "name") %} {{ row[c] | pct }} |{% endfor %}
+
+{% endfor %}
+{% endif %}
+
+## Tendências
+{% if trends is not none and not trends.empty %}
+Comparação entre vagas publicadas nos últimos 45 dias (n={{ trends.n_recent_jobs.iloc[0] }}) e anteriores (n={{ trends.n_older_jobs.iloc[0] }}).
+
+> Atenção: as janelas misturam fontes diferentes (fontes de vagas remotas publicam mais vagas recentes que os quadros das empresas), então trate estas variações como indício, não como tendência comprovada. O histórico próprio do Rota melhora isso a cada coleta.
+
+| Skill | Recentes | Anteriores | Variação |
+|---|---:|---:|---:|
+{% for row in trends.head(8).itertuples() %}
+| {{ row.name }} | {{ row.share_recent | pct }} | {{ row.share_older | pct }} | {{ "%+.0f" | format(row.delta_pp) }} p.p. |
+{% endfor %}
+{% else %}
+Ainda não há vagas suficientes com data para comparar períodos (mínimo de 10 em cada janela). Rode `rota collect` de novo em algumas semanas: o histórico fica no banco local.
+{% endif %}
+{% if not public and gap is not none %}
+
+---
+
+## Seu gap (privado)
+
+**Aderência ao mercado: {{ fit | pct }}** das skills mais pedidas, ponderadas pela demanda.
+
+| Skill | Demanda | Seu nível | Status | Prioridade |
+|---|---:|:---:|---|---:|
+{% for row in gap.head(25).itertuples() %}
+| {{ row.name }} | {{ row.demand | pct }} | {{ row.level }} | {{ STATUS_PT[row.status] }} | {{ "%.2f" | format(row.priority) }} |
+{% endfor %}
+{% endif %}
+{% if not public and plan is not none %}
+
+## Plano
+
+**{{ plan.weekly_hours | round(1) }}h/semana** → carreira {{ plan.hours.get("carreira", 0) }}h · exploração {{ plan.hours.get("exploracao", 0) }}h{% if plan.protected_exploration %} (protegida){% endif %} · interesses {{ plan.hours.get("interesses", 0) }}h
+
+### Esta semana
+{% for t in plan.this_week %}
+- **{{ t.foco }}**: {{ t.item }} — {{ t.horas }}h
+{% endfor %}
+
+### Prioridades de carreira
+{% for c in plan.career %}
+{{ loop.index }}. **{{ c.name }}** ({{ STATUS_PT[c.status] | lower }}) — {{ c.why }}; ~{{ c.effort_hours }}h (~{{ c.weeks }} semanas){% if c.pairs_with %}; costuma vir junto com {{ c.pairs_with | join(", ") }}{% endif %}
+
+{% endfor %}
+
+### Projetos sugeridos
+{% for p in plan.projects %}
+- **{{ p.title }}** — {{ p.description }}{% if p.deliverable %} *Entrega:* {{ p.deliverable }}.{% endif %}{% if p.why %} {{ p.why }}.{% endif %}{% if p.bridge_interest %} (ponte com {{ p.bridge_interest }}){% endif %}
+
+{% endfor %}
+
+### Exploração
+{% for e in plan.exploration %}
+- {{ e.name }} — {{ e.why }}
+{% else %}
+- Nenhum tópico ainda. Adicione em `config/focus.yaml` → `exploration.topics`.
+{% endfor %}
+
+### Interesses e pontes
+{% for b in plan.bridges %}
+- **{{ b.interest }}** → {{ b.idea }}{% if b.career_skills %} ({{ b.career_skills | join(", ") }}){% endif %}
+
+{% else %}
+{% for i in plan.interests %}
+- {{ i.name }} — {{ i.horas }}h/semana
+{% else %}
+- Nenhum interesse cadastrado (`config/focus.yaml` → `interests`).
+{% endfor %}
+{% endfor %}
+
+### Trade-offs (você decide)
+{% for t in plan.tradeoffs %}
+- {{ t }}
+{% endfor %}
+{% for n in plan.notes %}
+
+> {{ n }}
+{% endfor %}
+{% endif %}
+
+---
+<sub>Gerado pelo Rota. Dados de vagas públicas (Greenhouse, Lever, Ashby{% if "himalayas" in numbers.sources %}, Himalayas — remote jobs data via https://himalayas.app{% endif %}). Os textos das vagas ficam só na máquina local.</sub>

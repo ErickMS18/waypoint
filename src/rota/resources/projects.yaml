@@ -1,0 +1,59 @@
+# Practical project templates used when no LLM is configured (or as a fallback).
+# The planner scores each template by the priority of the skills it trains.
+projects:
+  - title: "RAG com avaliação de verdade"
+    skills: [rag, embeddings, vector_db, llm_evaluation, llm_apis]
+    description: "Assistente que responde perguntas sobre um conjunto de documentos públicos (ex.: editais, documentação técnica), com busca vetorial e um conjunto de perguntas-gabarito para medir acerto e alucinação."
+    deliverable: "Repo com notebook de avaliação + tabela de métricas no README"
+  - title: "Agente com ferramentas (tool calling / MCP)"
+    skills: [ai_agents, mcp, llm_apis, apis, python]
+    description: "Agente que usa 2–3 ferramentas reais (busca em API pública, calculadora, banco local) para cumprir tarefas, com logs de cada passo e testes de regressão."
+    deliverable: "CLI + vídeo curto mostrando o agente resolvendo 3 tarefas"
+  - title: "Modelo em produção: API + Docker + CI"
+    skills: [apis, docker, ci_cd, mlops, testing]
+    description: "Servir um modelo scikit-learn/PyTorch atrás de uma API FastAPI, empacotado em Docker, com testes e GitHub Actions rodando a cada push."
+    deliverable: "Imagem Docker + badge de CI verde no README"
+  - title: "Monitoramento de drift e rastreio de experimentos"
+    skills: [mlflow, model_monitoring, mlops, model_evaluation]
+    description: "Treinar versões de um modelo com MLflow e simular dados novos para detectar drift, gerando alertas e um relatório semanal."
+    deliverable: "Painel do MLflow + relatório de drift"
+  - title: "Fine-tuning LoRA de um modelo pequeno"
+    skills: [fine_tuning, transformers, pytorch, llm_evaluation]
+    description: "Ajustar um modelo aberto pequeno com LoRA para uma tarefa em português (ex.: classificação de reclamações) e comparar com prompt-only."
+    deliverable: "Modelo no Hugging Face Hub + comparação antes/depois"
+  - title: "Experimento A/B e inferência causal"
+    skills: [ab_testing, causal_inference, statistics, python]
+    description: "Desenhar e analisar um teste A/B com dados públicos ou simulados: tamanho de amostra, poder, efeito e um método causal (ex.: diff-in-diff)."
+    deliverable: "Notebook explicado + post curto com a conclusão"
+  - title: "Pipeline de dados em escala (Spark/Databricks)"
+    skills: [spark, databricks, etl, data_modeling]
+    description: "Ingerir um dataset público grande, transformar com PySpark em camadas (bronze/prata/ouro) e gerar features para um modelo."
+    deliverable: "Notebook Databricks Community + diagrama da arquitetura"
+  - title: "Deploy na nuvem (AWS)"
+    skills: [aws, sagemaker, terraform, docker]
+    description: "Publicar um modelo em AWS (Lambda ou SageMaker) com infraestrutura descrita em Terraform e custo estimado."
+    deliverable: "Endpoint funcionando + script de destruição dos recursos"
+  - title: "Previsão de séries temporais"
+    skills: [time_series, feature_engineering, model_evaluation, xgboost]
+    description: "Prever uma série pública (energia, clima, vendas) com baseline ingênuo, gradient boosting e validação temporal correta."
+    deliverable: "Comparação de modelos com backtesting"
+  - title: "NLP em português com Transformers"
+    skills: [nlp, transformers, pytorch, embeddings]
+    description: "Classificador de textos em PT-BR (ex.: notícias, avaliações) comparando TF-IDF + modelo linear com um modelo BERTimbau ajustado."
+    deliverable: "Relatório de erros + demo em Streamlit"
+  - title: "Servindo LLM local e medindo custo/latência"
+    skills: [llm_serving, llms, docker, model_evaluation]
+    description: "Rodar um modelo aberto localmente (Ollama/vLLM), medir latência, custo e qualidade contra uma API comercial na mesma tarefa."
+    deliverable: "Tabela custo × qualidade × latência"
+  - title: "Kubernetes local servindo modelos"
+    skills: [kubernetes, docker, mlops, apis]
+    description: "Subir um cluster local (kind/minikube) com a API do modelo, autoscaling e health checks."
+    deliverable: "Manifests + passo a passo"
+  - title: "Sistema de recomendação"
+    skills: [recommender_systems, embeddings, model_evaluation, sql]
+    description: "Recomendador com dados públicos (filmes, livros) comparando popularidade, filtragem colaborativa e embeddings, com métricas de ranking."
+    deliverable: "API de recomendação + métricas NDCG/Recall@k"
+  - title: "Modelagem analítica com dbt"
+    skills: [dbt, data_modeling, sql, data_quality]
+    description: "Modelar um dataset público em camadas com dbt, testes de qualidade e documentação gerada."
+    deliverable: "Site de documentação do dbt publicado"

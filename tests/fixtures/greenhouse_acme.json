@@ -1,0 +1,29 @@
+{
+ "jobs": [
+  {
+   "id": 101,
+   "title": "Machine Learning Engineer",
+   "updated_at": "2026-11-01T10:00:00-03:00",
+   "first_published": "2026-10-28T10:00:00-03:00",
+   "location": {
+    "name": "São Paulo, Brazil"
+   },
+   "absolute_url": "https://boards.greenhouse.io/acme/jobs/101",
+   "company_name": "Acme",
+   "content": "&lt;h2&gt;About the role&lt;/h2&gt;&lt;p&gt;Acme is building assistants for retailers. You will build RAG pipelines and LLM agents.&lt;/p&gt;\n&lt;h3&gt;Requirements&lt;/h3&gt;&lt;ul&gt;&lt;li&gt;3+ years of experience with Python&lt;/li&gt;&lt;li&gt;Experience with LLMs, embeddings and vector databases (pgvector or Pinecone)&lt;/li&gt;\n&lt;li&gt;Solid SQL and Docker&lt;/li&gt;&lt;li&gt;Fluent English&lt;/li&gt;&lt;/ul&gt;\n&lt;h3&gt;Nice to have&lt;/h3&gt;&lt;ul&gt;&lt;li&gt;Kubernetes&lt;/li&gt;&lt;li&gt;Experience fine-tuning models with LoRA&lt;/li&gt;&lt;/ul&gt;\n&lt;p&gt;Acme is an equal opportunity employer and values diversity in all forms, at every level of the company.&lt;/p&gt;"
+  },
+  {
+   "id": 102,
+   "title": "AI Sales Executive",
+   "updated_at": "2026-11-01T10:00:00-03:00",
+   "location": {
+    "name": "Remote"
+   },
+   "absolute_url": "https://boards.greenhouse.io/acme/jobs/102",
+   "content": "&lt;p&gt;Sell our AI platform. Requirements: CRM experience.&lt;/p&gt;&lt;p&gt;Sell our AI platform. Requirements: CRM experience.&lt;/p&gt;&lt;p&gt;Sell our AI platform. Requirements: CRM experience.&lt;/p&gt;&lt;p&gt;Sell our AI platform. Requirements: CRM experience.&lt;/p&gt;&lt;p&gt;Sell our AI platform. Requirements: CRM experience.&lt;/p&gt;"
+  }
+ ],
+ "meta": {
+  "total": 2
+ }
+}

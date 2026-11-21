@@ -1,0 +1,20 @@
+{
+ "data": [
+  {
+   "id": 555,
+   "name": "Cientista de Dados Júnior",
+   "careerPageName": "Empresa Exemplo",
+   "jobUrl": "https://exemplo.gupy.io/jobs/555",
+   "publishedDate": "2026-11-05T10:00:00.000Z",
+   "isRemoteWork": false,
+   "city": "Curitiba",
+   "state": "Paraná",
+   "description": "<p>Estamos buscando uma pessoa cientista de dados para o time de CRM, que vai trabalhar junto com marketing e produto.</p><p>Sobre a vaga: atuar com modelos de churn.</p><p><b>Requisitos</b></p><ul><li>Python e SQL</li><li>Estatística</li><li>Power BI</li></ul><p><b>Diferenciais</b></p><ul><li>Experiência com Azure</li><li>Inglês intermediário</li></ul>"
+  }
+ ],
+ "pagination": {
+  "offset": 0,
+  "limit": 20,
+  "total": 1
+ }
+}

@@ -1,0 +1,1216 @@
+{
+  "n_jobs": 40,
+  "n_gold_jobs": 40,
+  "skills": {
+    "precision": 0.9810526315789474,
+    "recall": 0.7540453074433657,
+    "f1": 0.8526989935956084,
+    "tp": 466,
+    "fp": 9,
+    "fn": 152
+  },
+  "skills_with_level": {
+    "precision": 0.9347368421052632,
+    "recall": 0.7184466019417476,
+    "f1": 0.8124428179322964,
+    "tp": 444,
+    "fp": 31,
+    "fn": 174
+  },
+  "level_accuracy_on_matched": 0.9527896995708155,
+  "seniority_accuracy": 1.0,
+  "unmapped_rate": 0.006276150627615063,
+  "macro_f1_per_job": 0.8412460352126601,
+  "by_lang": {
+    "en": {
+      "precision": 0.9851485148514851,
+      "recall": 0.7262773722627737,
+      "f1": 0.8361344537815126,
+      "tp": 199,
+      "fp": 3,
+      "fn": 75,
+      "n": 20
+    },
+    "pt": {
+      "precision": 0.978021978021978,
+      "recall": 0.7761627906976745,
+      "f1": 0.8654781199351703,
+      "tp": 267,
+      "fp": 6,
+      "fn": 77,
+      "n": 20
+    }
+  },
+  "by_role": {
+    "ai_ml_engineer": {
+      "precision": 0.9688888888888889,
+      "recall": 0.7649122807017544,
+      "f1": 0.8549019607843137,
+      "tp": 218,
+      "fp": 7,
+      "fn": 67,
+      "n": 20
+    },
+    "data_scientist": {
+      "precision": 0.992,
+      "recall": 0.7447447447447447,
+      "f1": 0.8507718696397941,
+      "tp": 248,
+      "fp": 2,
+      "fn": 85,
+      "n": 20
+    }
+  },
+  "by_category": {
+    "language": {
+      "precision": 0.9846153846153847,
+      "recall": 0.9846153846153847,
+      "f1": 0.9846153846153847,
+      "tp": 64,
+      "fp": 1,
+      "fn": 1
+    },
+    "ml": {
+      "precision": 0.9846153846153847,
+      "recall": 0.7710843373493976,
+      "f1": 0.8648648648648649,
+      "tp": 64,
+      "fp": 1,
+      "fn": 19
+    },
+    "dl": {
+      "precision": 0.9523809523809523,
+      "recall": 0.7692307692307693,
+      "f1": 0.8510638297872339,
+      "tp": 20,
+      "fp": 1,
+      "fn": 6
+    },
+    "genai": {
+      "precision": 0.9807692307692307,
+      "recall": 0.7555555555555555,
+      "f1": 0.8535564853556484,
+      "tp": 102,
+      "fp": 2,
+      "fn": 33
+    },
+    "nlp": {
+      "precision": 1.0,
+      "recall": 0.8333333333333334,
+      "f1": 0.9090909090909091,
+      "tp": 5,
+      "fp": 0,
+      "fn": 1
+    },
+    "stats": {
+      "precision": 1.0,
+      "recall": 0.9,
+      "f1": 0.9473684210526316,
+      "tp": 27,
+      "fp": 0,
+      "fn": 3
+    },
+    "data": {
+      "precision": 1.0,
+      "recall": 0.6923076923076923,
+      "f1": 0.8181818181818181,
+      "tp": 27,
+      "fp": 0,
+      "fn": 12
+    },
+    "db": {
+      "precision": 1.0,
+      "recall": 0.7857142857142857,
+      "f1": 0.88,
+      "tp": 11,
+      "fp": 0,
+      "fn": 3
+    },
+    "cloud": {
+      "precision": 0.918918918918919,
+      "recall": 1.0,
+      "f1": 0.9577464788732395,
+      "tp": 34,
+      "fp": 3,
+      "fn": 0
+    },
+    "mlops": {
+      "precision": 0.975,
+      "recall": 0.6,
+      "f1": 0.7428571428571429,
+      "tp": 39,
+      "fp": 1,
+      "fn": 26
+    },
+    "eng": {
+      "precision": 1.0,
+      "recall": 0.5254237288135594,
+      "f1": 0.688888888888889,
+      "tp": 31,
+      "fp": 0,
+      "fn": 28
+    },
+    "bi": {
+      "precision": 1.0,
+      "recall": 0.5625,
+      "f1": 0.72,
+      "tp": 9,
+      "fp": 0,
+      "fn": 7
+    },
+    "spoken": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "tp": 10,
+      "fp": 0,
+      "fn": 0
+    },
+    "soft": {
+      "precision": 1.0,
+      "recall": 0.625,
+      "f1": 0.7692307692307693,
+      "tp": 20,
+      "fp": 0,
+      "fn": 12
+    }
+  },
+  "skills_f1_ci95": [
+    0.8194317140238313,
+    0.8814531548757171
+  ],
+  "top_false_positives": [
+    [
+      "mlops",
+      1
+    ],
+    [
+      "llms",
+      1
+    ],
+    [
+      "gpu_training",
+      1
+    ],
+    [
+      "aws",
+      1
+    ],
+    [
+      "azure",
+      1
+    ],
+    [
+      "gcp",
+      1
+    ],
+    [
+      "cpp",
+      1
+    ],
+    [
+      "optimization",
+      1
+    ]
+  ],
+  "top_false_negatives": [
+    [
+      "mlops",
+      11
+    ],
+    [
+      "testing",
+      11
+    ],
+    [
+      "model_monitoring",
+      11
+    ],
+    [
+      "software_engineering",
+      9
+    ],
+    [
+      "llm_evaluation",
+      8
+    ],
+    [
+      "communication",
+      7
+    ],
+    [
+      "model_evaluation",
+      7
+    ],
+    [
+      "llm_apis",
+      6
+    ]
+  ],
+  "per_job": [
+    {
+      "job_key": "greenhouse:anthropic:5390811008",
+      "lang": "en",
+      "role": "ai_ml_engineer",
+      "tp": 4,
+      "fp": 0,
+      "fn": 0,
+      "tp_req": 4,
+      "fp_req": 0,
+      "fn_req": 0,
+      "level_correct": 4,
+      "matched": 4,
+      "sen_gold": "senior",
+      "sen_pred": "senior",
+      "unmapped": 0,
+      "n_pred": 4,
+      "fp_ids": [],
+      "fn_ids": []
+    },
+    {
+      "job_key": "himalayas:bip-brasil:pessoa-engenheira-de-inteligencia-artificial-ia-senior-6110702660",
+      "lang": "pt",
+      "role": "ai_ml_engineer",
+      "tp": 14,
+      "fp": 0,
+      "fn": 2,
+      "tp_req": 14,
+      "fp_req": 0,
+      "fn_req": 2,
+      "level_correct": 14,
+      "matched": 14,
+      "sen_gold": "senior",
+      "sen_pred": "senior",
+      "unmapped": 0,
+      "n_pred": 14,
+      "fp_ids": [],
+      "fn_ids": [
+        "llm_apis",
+        "llm_evaluation"
+      ]
+    },
+    {
+      "job_key": "greenhouse:databricks:8401114002",
+      "lang": "en",
+      "role": "ai_ml_engineer",
+      "tp": 12,
+      "fp": 0,
+      "fn": 4,
+      "tp_req": 12,
+      "fp_req": 0,
+      "fn_req": 4,
+      "level_correct": 12,
+      "matched": 12,
+      "sen_gold": "staff_plus",
+      "sen_pred": "staff_plus",
+      "unmapped": 0,
+      "n_pred": 12,
+      "fp_ids": [],
+      "fn_ids": [
+        "feature_engineering",
+        "llm_evaluation",
+        "mlops",
+        "testing"
+      ]
+    },
+    {
+      "job_key": "greenhouse:stone:7984857003",
+      "lang": "pt",
+      "role": "ai_ml_engineer",
+      "tp": 11,
+      "fp": 0,
+      "fn": 5,
+      "tp_req": 11,
+      "fp_req": 0,
+      "fn_req": 5,
+      "level_correct": 11,
+      "matched": 11,
+      "sen_gold": "senior",
+      "sen_pred": "senior",
+      "unmapped": 0,
+      "n_pred": 11,
+      "fp_ids": [],
+      "fn_ids": [
+        "apis",
+        "communication",
+        "javascript",
+        "mlops",
+        "software_engineering"
+      ]
+    },
+    {
+      "job_key": "ashby:openai:6c01266f-6ddb-42d1-a529-84736ae8587a",
+      "lang": "en",
+      "role": "ai_ml_engineer",
+      "tp": 4,
+      "fp": 0,
+      "fn": 5,
+      "tp_req": 4,
+      "fp_req": 0,
+      "fn_req": 5,
+      "level_correct": 4,
+      "matched": 4,
+      "sen_gold": "unknown",
+      "sen_pred": "unknown",
+      "unmapped": 0,
+      "n_pred": 4,
+      "fp_ids": [],
+      "fn_ids": [
+        "ai_agents",
+        "llm_apis",
+        "llm_evaluation",
+        "llms",
+        "machine_learning"
+      ]
+    },
+    {
+      "job_key": "himalayas:omie:engenheiro-a-de-ia-agentes",
+      "lang": "pt",
+      "role": "ai_ml_engineer",
+      "tp": 25,
+      "fp": 1,
+      "fn": 4,
+      "tp_req": 25,
+      "fp_req": 1,
+      "fn_req": 4,
+      "level_correct": 25,
+      "matched": 25,
+      "sen_gold": "unknown",
+      "sen_pred": "unknown",
+      "unmapped": 0,
+      "n_pred": 26,
+      "fp_ids": [
+        "mlops"
+      ],
+      "fn_ids": [
+        "data_quality",
+        "kubernetes",
+        "software_engineering",
+        "testing"
+      ]
+    },
+    {
+      "job_key": "ashby:openai:ca9e0aeb-6df1-4b73-8ec0-2e9e124712f1",
+      "lang": "en",
+      "role": "ai_ml_engineer",
+      "tp": 7,
+      "fp": 0,
+      "fn": 3,
+      "tp_req": 7,
+      "fp_req": 0,
+      "fn_req": 3,
+      "level_correct": 7,
+      "matched": 7,
+      "sen_gold": "mid",
+      "sen_pred": "mid",
+      "unmapped": 0,
+      "n_pred": 7,
+      "fp_ids": [],
+      "fn_ids": [
+        "ai_agents",
+        "frontend",
+        "llm_evaluation"
+      ]
+    },
+    {
+      "job_key": "himalayas:leega-consultoria:machine-learning-engineer-sr-7068959968",
+      "lang": "pt",
+      "role": "ai_ml_engineer",
+      "tp": 6,
+      "fp": 1,
+      "fn": 9,
+      "tp_req": 4,
+      "fp_req": 3,
+      "fn_req": 11,
+      "level_correct": 4,
+      "matched": 6,
+      "sen_gold": "senior",
+      "sen_pred": "senior",
+      "unmapped": 0,
+      "n_pred": 7,
+      "fp_ids": [
+        "llms"
+      ],
+      "fn_ids": [
+        "apis",
+        "feature_engineering",
+        "gpu_training",
+        "llm_serving",
+        "machine_learning",
+        "model_monitoring",
+        "nosql",
+        "optimization",
+        "testing"
+      ]
+    },
+    {
+      "job_key": "ashby:openai:de06790a-7243-4e33-a6f1-e7bd34009588",
+      "lang": "en",
+      "role": "ai_ml_engineer",
+      "tp": 7,
+      "fp": 1,
+      "fn": 3,
+      "tp_req": 7,
+      "fp_req": 1,
+      "fn_req": 3,
+      "level_correct": 7,
+      "matched": 7,
+      "sen_gold": "unknown",
+      "sen_pred": "mid",
+      "unmapped": 0,
+      "n_pred": 8,
+      "fp_ids": [
+        "gpu_training"
+      ],
+      "fn_ids": [
+        "llm_serving",
+        "mlops",
+        "prompt_engineering"
+      ]
+    },
+    {
+      "job_key": "greenhouse:stone:8041727003",
+      "lang": "pt",
+      "role": "ai_ml_engineer",
+      "tp": 12,
+      "fp": 0,
+      "fn": 4,
+      "tp_req": 12,
+      "fp_req": 0,
+      "fn_req": 4,
+      "level_correct": 12,
+      "matched": 12,
+      "sen_gold": "senior",
+      "sen_pred": "senior",
+      "unmapped": 0,
+      "n_pred": 12,
+      "fp_ids": [],
+      "fn_ids": [
+        "data_visualization",
+        "etl",
+        "product_sense",
+        "testing"
+      ]
+    },
+    {
+      "job_key": "greenhouse:scaleai:4732798005",
+      "lang": "en",
+      "role": "ai_ml_engineer",
+      "tp": 14,
+      "fp": 0,
+      "fn": 6,
+      "tp_req": 14,
+      "fp_req": 0,
+      "fn_req": 6,
+      "level_correct": 14,
+      "matched": 14,
+      "sen_gold": "senior",
+      "sen_pred": "senior",
+      "unmapped": 0,
+      "n_pred": 14,
+      "fp_ids": [],
+      "fn_ids": [
+        "communication",
+        "llm_evaluation",
+        "llm_serving",
+        "mlops",
+        "rag",
+        "software_engineering"
+      ]
+    },
+    {
+      "job_key": "himalayas:grupo-sysmap:engenheiro-de-ia-sr",
+      "lang": "pt",
+      "role": "ai_ml_engineer",
+      "tp": 15,
+      "fp": 3,
+      "fn": 5,
+      "tp_req": 15,
+      "fp_req": 3,
+      "fn_req": 5,
+      "level_correct": 15,
+      "matched": 15,
+      "sen_gold": "senior",
+      "sen_pred": "senior",
+      "unmapped": 0,
+      "n_pred": 18,
+      "fp_ids": [
+        "aws",
+        "azure",
+        "gcp"
+      ],
+      "fn_ids": [
+        "data_quality",
+        "guardrails",
+        "llm_apis",
+        "llm_evaluation",
+        "model_monitoring"
+      ]
+    },
+    {
+      "job_key": "greenhouse:anthropic:5454650008",
+      "lang": "en",
+      "role": "ai_ml_engineer",
+      "tp": 6,
+      "fp": 0,
+      "fn": 0,
+      "tp_req": 6,
+      "fp_req": 0,
+      "fn_req": 0,
+      "level_correct": 6,
+      "matched": 6,
+      "sen_gold": "mid",
+      "sen_pred": "mid",
+      "unmapped": 0,
+      "n_pred": 6,
+      "fp_ids": [],
+      "fn_ids": []
+    },
+    {
+      "job_key": "himalayas:pagbank:engenheiro-de-inteligencia-artificial-sr-ai-engineer-agents",
+      "lang": "pt",
+      "role": "ai_ml_engineer",
+      "tp": 13,
+      "fp": 0,
+      "fn": 0,
+      "tp_req": 13,
+      "fp_req": 0,
+      "fn_req": 0,
+      "level_correct": 13,
+      "matched": 13,
+      "sen_gold": "senior",
+      "sen_pred": "senior",
+      "unmapped": 0,
+      "n_pred": 13,
+      "fp_ids": [],
+      "fn_ids": []
+    },
+    {
+      "job_key": "himalayas:ci-t:job-31573-ai-engineer-master",
+      "lang": "en",
+      "role": "ai_ml_engineer",
+      "tp": 18,
+      "fp": 0,
+      "fn": 2,
+      "tp_req": 15,
+      "fp_req": 3,
+      "fn_req": 5,
+      "level_correct": 15,
+      "matched": 18,
+      "sen_gold": "unknown",
+      "sen_pred": "senior",
+      "unmapped": 0,
+      "n_pred": 18,
+      "fp_ids": [],
+      "fn_ids": [
+        "llms",
+        "model_monitoring"
+      ]
+    },
+    {
+      "job_key": "himalayas:luza-group:desenvolvedor-a-senior-tech-lead-ia-vibe-coding-e-arquitetura-6154276887",
+      "lang": "pt",
+      "role": "ai_ml_engineer",
+      "tp": 10,
+      "fp": 0,
+      "fn": 5,
+      "tp_req": 10,
+      "fp_req": 0,
+      "fn_req": 5,
+      "level_correct": 10,
+      "matched": 10,
+      "sen_gold": "senior",
+      "sen_pred": "senior",
+      "unmapped": 2,
+      "n_pred": 12,
+      "fp_ids": [],
+      "fn_ids": [
+        "apis",
+        "distributed_systems",
+        "nosql",
+        "software_engineering",
+        "testing"
+      ]
+    },
+    {
+      "job_key": "greenhouse:anthropic:5390795008",
+      "lang": "en",
+      "role": "ai_ml_engineer",
+      "tp": 7,
+      "fp": 0,
+      "fn": 1,
+      "tp_req": 7,
+      "fp_req": 0,
+      "fn_req": 1,
+      "level_correct": 7,
+      "matched": 7,
+      "sen_gold": "senior",
+      "sen_pred": "senior",
+      "unmapped": 1,
+      "n_pred": 8,
+      "fp_ids": [],
+      "fn_ids": [
+        "product_sense"
+      ]
+    },
+    {
+      "job_key": "himalayas:vetta-tecnologia:engenheiro-de-ia-senior",
+      "lang": "pt",
+      "role": "ai_ml_engineer",
+      "tp": 13,
+      "fp": 0,
+      "fn": 3,
+      "tp_req": 13,
+      "fp_req": 0,
+      "fn_req": 3,
+      "level_correct": 13,
+      "matched": 13,
+      "sen_gold": "senior",
+      "sen_pred": "senior",
+      "unmapped": 0,
+      "n_pred": 13,
+      "fp_ids": [],
+      "fn_ids": [
+        "embeddings",
+        "llm_apis",
+        "model_monitoring"
+      ]
+    },
+    {
+      "job_key": "himalayas:talan:senior-agentic-ai-developer-microsoft-copilot-studio-8898541879",
+      "lang": "en",
+      "role": "ai_ml_engineer",
+      "tp": 11,
+      "fp": 1,
+      "fn": 5,
+      "tp_req": 10,
+      "fp_req": 2,
+      "fn_req": 6,
+      "level_correct": 10,
+      "matched": 11,
+      "sen_gold": "senior",
+      "sen_pred": "senior",
+      "unmapped": 0,
+      "n_pred": 12,
+      "fp_ids": [
+        "cpp"
+      ],
+      "fn_ids": [
+        "ai_agents",
+        "guardrails",
+        "model_monitoring",
+        "nosql",
+        "testing"
+      ]
+    },
+    {
+      "job_key": "himalayas:aitt:ai-engineer-part-time-agentes-de-ia-automatizacion",
+      "lang": "pt",
+      "role": "ai_ml_engineer",
+      "tp": 9,
+      "fp": 0,
+      "fn": 1,
+      "tp_req": 7,
+      "fp_req": 2,
+      "fn_req": 3,
+      "level_correct": 7,
+      "matched": 9,
+      "sen_gold": "unknown",
+      "sen_pred": "unknown",
+      "unmapped": 0,
+      "n_pred": 9,
+      "fp_ids": [],
+      "fn_ids": [
+        "prompt_engineering"
+      ]
+    },
+    {
+      "job_key": "himalayas:agentic-dream:data-scientist-remote-latam-only",
+      "lang": "en",
+      "role": "data_scientist",
+      "tp": 30,
+      "fp": 0,
+      "fn": 5,
+      "tp_req": 30,
+      "fp_req": 0,
+      "fn_req": 5,
+      "level_correct": 30,
+      "matched": 30,
+      "sen_gold": "unknown",
+      "sen_pred": "unknown",
+      "unmapped": 0,
+      "n_pred": 30,
+      "fp_ids": [],
+      "fn_ids": [
+        "big_data",
+        "data_visualization",
+        "etl",
+        "mlops",
+        "tensorflow"
+      ]
+    },
+    {
+      "job_key": "greenhouse:stone:7978378003",
+      "lang": "pt",
+      "role": "data_scientist",
+      "tp": 14,
+      "fp": 0,
+      "fn": 1,
+      "tp_req": 14,
+      "fp_req": 0,
+      "fn_req": 1,
+      "level_correct": 14,
+      "matched": 14,
+      "sen_gold": "mid",
+      "sen_pred": "mid",
+      "unmapped": 0,
+      "n_pred": 14,
+      "fp_ids": [],
+      "fn_ids": [
+        "software_engineering"
+      ]
+    },
+    {
+      "job_key": "lever:spotify:56ea6f2e-f20b-4e46-ab94-d3eb0a89482d",
+      "lang": "en",
+      "role": "data_scientist",
+      "tp": 7,
+      "fp": 0,
+      "fn": 3,
+      "tp_req": 7,
+      "fp_req": 0,
+      "fn_req": 3,
+      "level_correct": 7,
+      "matched": 7,
+      "sen_gold": "unknown",
+      "sen_pred": "mid",
+      "unmapped": 0,
+      "n_pred": 7,
+      "fp_ids": [],
+      "fn_ids": [
+        "data_visualization",
+        "product_sense",
+        "statistics"
+      ]
+    },
+    {
+      "job_key": "himalayas:leega-consultoria:cientista-de-dados-senior-9445172515",
+      "lang": "pt",
+      "role": "data_scientist",
+      "tp": 22,
+      "fp": 0,
+      "fn": 3,
+      "tp_req": 20,
+      "fp_req": 2,
+      "fn_req": 5,
+      "level_correct": 20,
+      "matched": 22,
+      "sen_gold": "senior",
+      "sen_pred": "senior",
+      "unmapped": 0,
+      "n_pred": 22,
+      "fp_ids": [],
+      "fn_ids": [
+        "deep_learning",
+        "numpy",
+        "probability"
+      ]
+    },
+    {
+      "job_key": "greenhouse:stripe:8323907",
+      "lang": "en",
+      "role": "data_scientist",
+      "tp": 10,
+      "fp": 0,
+      "fn": 5,
+      "tp_req": 8,
+      "fp_req": 2,
+      "fn_req": 7,
+      "level_correct": 8,
+      "matched": 10,
+      "sen_gold": "staff_plus",
+      "sen_pred": "staff_plus",
+      "unmapped": 0,
+      "n_pred": 10,
+      "fp_ids": [],
+      "fn_ids": [
+        "communication",
+        "llm_evaluation",
+        "mlops",
+        "model_evaluation",
+        "model_monitoring"
+      ]
+    },
+    {
+      "job_key": "himalayas:compass-uol:python-data-science-mid",
+      "lang": "pt",
+      "role": "data_scientist",
+      "tp": 12,
+      "fp": 0,
+      "fn": 2,
+      "tp_req": 12,
+      "fp_req": 0,
+      "fn_req": 2,
+      "level_correct": 12,
+      "matched": 12,
+      "sen_gold": "mid",
+      "sen_pred": "mid",
+      "unmapped": 0,
+      "n_pred": 12,
+      "fp_ids": [],
+      "fn_ids": [
+        "docker",
+        "mlops"
+      ]
+    },
+    {
+      "job_key": "ashby:openai:145f2801-4c59-4e90-a847-32085d20511c",
+      "lang": "en",
+      "role": "data_scientist",
+      "tp": 4,
+      "fp": 0,
+      "fn": 2,
+      "tp_req": 4,
+      "fp_req": 0,
+      "fn_req": 2,
+      "level_correct": 4,
+      "matched": 4,
+      "sen_gold": "staff_plus",
+      "sen_pred": "staff_plus",
+      "unmapped": 0,
+      "n_pred": 4,
+      "fp_ids": [],
+      "fn_ids": [
+        "communication",
+        "product_sense"
+      ]
+    },
+    {
+      "job_key": "himalayas:grupo-autoglass-engenharia:cientista-de-dados-i-foco-em-ia-generativa-grupo-autoglass",
+      "lang": "pt",
+      "role": "data_scientist",
+      "tp": 13,
+      "fp": 0,
+      "fn": 2,
+      "tp_req": 13,
+      "fp_req": 0,
+      "fn_req": 2,
+      "level_correct": 13,
+      "matched": 13,
+      "sen_gold": "junior",
+      "sen_pred": "junior",
+      "unmapped": 0,
+      "n_pred": 13,
+      "fp_ids": [],
+      "fn_ids": [
+        "communication",
+        "llm_apis"
+      ]
+    },
+    {
+      "job_key": "ashby:openai:082f4d82-499f-4150-892f-0b0d1105fffe",
+      "lang": "en",
+      "role": "data_scientist",
+      "tp": 6,
+      "fp": 0,
+      "fn": 0,
+      "tp_req": 6,
+      "fp_req": 0,
+      "fn_req": 0,
+      "level_correct": 6,
+      "matched": 6,
+      "sen_gold": "staff_plus",
+      "sen_pred": "staff_plus",
+      "unmapped": 0,
+      "n_pred": 6,
+      "fp_ids": [],
+      "fn_ids": []
+    },
+    {
+      "job_key": "himalayas:leega-consultoria:cientista-de-dados-senior-mlops-bilingue-espanhol",
+      "lang": "pt",
+      "role": "data_scientist",
+      "tp": 9,
+      "fp": 0,
+      "fn": 4,
+      "tp_req": 8,
+      "fp_req": 1,
+      "fn_req": 5,
+      "level_correct": 8,
+      "matched": 9,
+      "sen_gold": "senior",
+      "sen_pred": "senior",
+      "unmapped": 0,
+      "n_pred": 9,
+      "fp_ids": [],
+      "fn_ids": [
+        "clustering",
+        "feature_engineering",
+        "mlops",
+        "model_evaluation"
+      ]
+    },
+    {
+      "job_key": "greenhouse:anthropic:5467893008",
+      "lang": "en",
+      "role": "data_scientist",
+      "tp": 9,
+      "fp": 0,
+      "fn": 15,
+      "tp_req": 8,
+      "fp_req": 1,
+      "fn_req": 16,
+      "level_correct": 8,
+      "matched": 9,
+      "sen_gold": "unknown",
+      "sen_pred": "senior",
+      "unmapped": 0,
+      "n_pred": 9,
+      "fp_ids": [],
+      "fn_ids": [
+        "ai_agents",
+        "airflow",
+        "bayesian",
+        "communication",
+        "data_quality",
+        "deep_learning",
+        "docker",
+        "llm_apis",
+        "llms",
+        "mlflow",
+        "model_evaluation",
+        "model_monitoring",
+        "software_engineering",
+        "testing",
+        "xgboost"
+      ]
+    },
+    {
+      "job_key": "himalayas:experian:especialista-cientista-de-dados-i",
+      "lang": "pt",
+      "role": "data_scientist",
+      "tp": 12,
+      "fp": 0,
+      "fn": 9,
+      "tp_req": 12,
+      "fp_req": 0,
+      "fn_req": 9,
+      "level_correct": 12,
+      "matched": 12,
+      "sen_gold": "staff_plus",
+      "sen_pred": "staff_plus",
+      "unmapped": 0,
+      "n_pred": 12,
+      "fp_ids": [],
+      "fn_ids": [
+        "big_data",
+        "fine_tuning",
+        "git",
+        "gpu_training",
+        "model_evaluation",
+        "model_monitoring",
+        "software_engineering",
+        "testing",
+        "transformers"
+      ]
+    },
+    {
+      "job_key": "himalayas:latino-legends:data-scientist",
+      "lang": "en",
+      "role": "data_scientist",
+      "tp": 22,
+      "fp": 0,
+      "fn": 6,
+      "tp_req": 20,
+      "fp_req": 2,
+      "fn_req": 8,
+      "level_correct": 20,
+      "matched": 22,
+      "sen_gold": "junior",
+      "sen_pred": "junior",
+      "unmapped": 0,
+      "n_pred": 22,
+      "fp_ids": [],
+      "fn_ids": [
+        "data_quality",
+        "data_visualization",
+        "etl",
+        "mlops",
+        "model_monitoring",
+        "testing"
+      ]
+    },
+    {
+      "job_key": "greenhouse:quintoandar:4129556009",
+      "lang": "pt",
+      "role": "data_scientist",
+      "tp": 12,
+      "fp": 0,
+      "fn": 7,
+      "tp_req": 9,
+      "fp_req": 3,
+      "fn_req": 10,
+      "level_correct": 9,
+      "matched": 12,
+      "sen_gold": "staff_plus",
+      "sen_pred": "staff_plus",
+      "unmapped": 0,
+      "n_pred": 12,
+      "fp_ids": [],
+      "fn_ids": [
+        "ab_testing",
+        "clustering",
+        "llm_evaluation",
+        "llms",
+        "mlops",
+        "nlp",
+        "recommender_systems"
+      ]
+    },
+    {
+      "job_key": "lever:spotify:b4f6cd01-1d5d-41a9-b287-6d10416da03c",
+      "lang": "en",
+      "role": "data_scientist",
+      "tp": 7,
+      "fp": 0,
+      "fn": 2,
+      "tp_req": 6,
+      "fp_req": 1,
+      "fn_req": 3,
+      "level_correct": 6,
+      "matched": 7,
+      "sen_gold": "senior",
+      "sen_pred": "senior",
+      "unmapped": 0,
+      "n_pred": 7,
+      "fp_ids": [],
+      "fn_ids": [
+        "product_sense",
+        "time_series"
+      ]
+    },
+    {
+      "job_key": "himalayas:luza-group:cientista-de-dados",
+      "lang": "pt",
+      "role": "data_scientist",
+      "tp": 18,
+      "fp": 1,
+      "fn": 6,
+      "tp_req": 16,
+      "fp_req": 3,
+      "fn_req": 8,
+      "level_correct": 16,
+      "matched": 18,
+      "sen_gold": "unknown",
+      "sen_pred": "mid",
+      "unmapped": 0,
+      "n_pred": 19,
+      "fp_ids": [
+        "optimization"
+      ],
+      "fn_ids": [
+        "apis",
+        "feature_engineering",
+        "model_evaluation",
+        "model_monitoring",
+        "software_engineering",
+        "testing"
+      ]
+    },
+    {
+      "job_key": "greenhouse:ebanx:8011812003",
+      "lang": "en",
+      "role": "data_scientist",
+      "tp": 13,
+      "fp": 0,
+      "fn": 6,
+      "tp_req": 13,
+      "fp_req": 0,
+      "fn_req": 6,
+      "level_correct": 13,
+      "matched": 13,
+      "sen_gold": "staff_plus",
+      "sen_pred": "staff_plus",
+      "unmapped": 0,
+      "n_pred": 13,
+      "fp_ids": [],
+      "fn_ids": [
+        "apis",
+        "communication",
+        "mlops",
+        "model_evaluation",
+        "software_engineering",
+        "testing"
+      ]
+    },
+    {
+      "job_key": "himalayas:arvo-com:vaga-afirmativa-mulheres-cientista-de-dados-senior",
+      "lang": "pt",
+      "role": "data_scientist",
+      "tp": 9,
+      "fp": 0,
+      "fn": 2,
+      "tp_req": 9,
+      "fp_req": 0,
+      "fn_req": 2,
+      "level_correct": 9,
+      "matched": 9,
+      "sen_gold": "senior",
+      "sen_pred": "senior",
+      "unmapped": 0,
+      "n_pred": 9,
+      "fp_ids": [],
+      "fn_ids": [
+        "data_quality",
+        "data_visualization"
+      ]
+    },
+    {
+      "job_key": "himalayas:transperfect:baidu-charon-sme-law-medicine-data-science-coding-brazil",
+      "lang": "en",
+      "role": "data_scientist",
+      "tp": 1,
+      "fp": 1,
+      "fn": 2,
+      "tp_req": 1,
+      "fp_req": 1,
+      "fn_req": 2,
+      "level_correct": 1,
+      "matched": 1,
+      "sen_gold": "mid",
+      "sen_pred": "mid",
+      "unmapped": 0,
+      "n_pred": 2,
+      "fp_ids": [
+        "llm_apis"
+      ],
+      "fn_ids": [
+        "excel",
+        "llms"
+      ]
+    },
+    {
+      "job_key": "himalayas:stefanini:cientista-de-dados-sr",
+      "lang": "pt",
+      "role": "data_scientist",
+      "tp": 18,
+      "fp": 0,
+      "fn": 3,
+      "tp_req": 18,
+      "fp_req": 0,
+      "fn_req": 3,
+      "level_correct": 18,
+      "matched": 18,
+      "sen_gold": "senior",
+      "sen_pred": "senior",
+      "unmapped": 0,
+      "n_pred": 18,
+      "fp_ids": [],
+      "fn_ids": [
+        "data_visualization",
+        "model_evaluation",
+        "model_monitoring"
+      ]
+    }
+  ]
+}

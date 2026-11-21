@@ -1,0 +1,16 @@
+# Focos e pesos. O plano divide suas horas semanais por estes pesos.
+# Nada aqui é "irrelevante": quando houver conflito, o Rota mostra o trade-off e pergunta.
+
+weekly_hours: 10            # horas por semana que você quer dedicar a estudo/projetos pessoais
+
+weights:                    # somam 100
+  carreira: 50              # fechar o gap em relação ao mercado dos cargos-alvo
+  exploracao: 30            # coisas novas, sem compromisso com retorno imediato
+  interesses: 20            # interesses pessoais fora do foco profissional
+
+exploration:
+  protected: true           # true = horas de exploração nunca são realocadas automaticamente
+  topics: []                # ex.: ["Rust", "visão computacional", "agentes com MCP"]
+  include_emerging: true    # sugere skills emergentes do mercado como opções de exploração
+
+interests: []               # ex.: ["violão", "astronomia"] — o Rota sugere pontes com a carreira

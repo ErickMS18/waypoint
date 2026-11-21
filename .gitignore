@@ -1,0 +1,26 @@
+# ---- Personal data: never commit (enforced by tests/test_privacy.py) ----
+.env
+data/
+profile/
+reports/
+inbox/*
+!inbox/README.md
+*.db
+config/*.local.yaml
+*.sqlite
+
+# ---- Python ----
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.pytest_cache/
+build/
+dist/
+
+# ---- Editors / OS ----
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

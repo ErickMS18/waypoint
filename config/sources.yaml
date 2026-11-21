@@ -1,0 +1,67 @@
+# Fontes de vagas. Todas usam APIs públicas de leitura, sem login.
+# Board/site = o pedaço da URL de carreiras da empresa:
+#   Greenhouse: boards.greenhouse.io/<board>      Lever: jobs.lever.co/<site>
+#   Ashby:      jobs.ashbyhq.com/<board>
+# Rode `rota boards check` para validar a lista (boards inexistentes são ignorados na coleta).
+
+http:
+  delay_seconds: 1.0        # pausa entre requisições ao mesmo host
+  timeout_seconds: 30
+  user_agent: "rota/0.1 (personal career research; +https://github.com/ErickMS18/rota)"
+
+greenhouse:
+  enabled: true
+  boards:
+    # Brasil
+    - ebanx
+    - quintoandar
+    - wildlifestudios
+    - vtex
+    - nubank
+    - stone
+    # Internacional (muitas vagas de IA/ML)
+    - databricks
+    - gitlab
+    - stripe
+    - anthropic
+    - scaleai
+
+lever:
+  enabled: true
+  sites:
+    - palantir
+    - spotify      # hospedado na região EU (o coletor tenta api.eu.lever.co sozinho)
+    - neon         # Brasil
+
+ashby:
+  enabled: true
+  boards:
+    - openai
+    - cohere
+    - linear
+    - elevenlabs
+    - notion
+    - ramp
+
+himalayas:
+  # Vagas remotas internacionais. country=Brazil => só vagas que aceitam quem mora no Brasil.
+  enabled: true
+  country: Brazil
+  max_pages: 3              # 20 vagas por página
+  attribution: "Remote jobs data via Himalayas (https://himalayas.app)"
+
+gupy:
+  # DESLIGADA por padrão. A Gupy não publica API pública de leitura documentada e os
+  # Termos de Uso proíbem "agregar, copiar ou duplicar partes" da plataforma.
+  # Se ligar: uso pessoal, ritmo lento, e só publique números agregados (nunca o texto das vagas).
+  # Para ligar só na sua máquina, crie config/sources.local.yaml (fora do Git) com:
+  #   gupy:
+  #     enabled: true
+  enabled: false
+  max_pages: 2
+  page_size: 20
+  delay_seconds: 3.0
+
+manual:
+  enabled: true
+  inbox_dir: inbox

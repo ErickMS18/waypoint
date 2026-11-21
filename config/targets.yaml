@@ -1,0 +1,39 @@
+# Cargos-alvo. Edite à vontade: o resto do sistema lê daqui.
+# title_include / title_exclude são expressões regulares (Python), sem diferenciar maiúsculas.
+# search_terms são usados nas fontes que têm busca por texto (Himalayas, Gupy).
+
+roles:
+  ai_ml_engineer:
+    label: "AI/ML Engineer (LLM/GenAI)"
+    search_terms:
+      - machine learning engineer
+      - ai engineer
+      - llm engineer
+      - engenheiro de machine learning
+      - engenheiro de ia
+    title_include:
+      - '\b(machine learning|ml|mlops)\b.{0,30}\b(engineer|engineering|engenheir[oa]|developer|desenvolvedor[a]?|specialist|especialista)\b'
+      - '\b(ai|ia|genai|gen ai|llm|applied ai|generative ai|intelig[eê]ncia artificial)\b.{0,30}\b(engineer|engenheir[oa]|developer|desenvolvedor[a]?|specialist|especialista)\b'
+      - '\b(engenheir[oa]|desenvolvedor[a]?)\b.{0,25}\b(machine learning|ia|intelig[eê]ncia artificial|ml)\b'
+    title_exclude:
+      - '\b(sales|vendas|account executive|recruit\w*|marketing|legal|counsel|product manager|designer)\b'
+      - '\b(director|diretor[a]?|vp|vice president|head of|manager|gerente)\b'
+      - '\b(support|suporte|solutions? (engineer|architect)|arquitet[oa] de solu\w+)\b'
+
+  data_scientist:
+    label: "Data Scientist"
+    search_terms:
+      - data scientist
+      - cientista de dados
+    title_include:
+      - '\bdata scien(tist|ce)\b'
+      - '\bcientista de dados\b'
+      - '\bci[eê]ncia de dados\b'
+      - '\b(applied|decision) scientist\b'
+    title_exclude:
+      - '\b(director|diretor[a]?|vp|vice president|head of|manager|gerente)\b'
+      - '\b(professor|teacher|instructor|tutor)\b'
+
+# Senioridades em que você quer focar o plano (as análises mostram todas).
+# Valores: intern, junior, mid, senior, staff_plus
+seniority_focus: [intern, junior, mid]

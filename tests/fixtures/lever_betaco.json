@@ -1,0 +1,25 @@
+[
+ {
+  "id": "aaaa-1",
+  "text": "Data Scientist II",
+  "categories": {
+   "location": "New York, NY",
+   "team": "Data"
+  },
+  "createdAt": 1761900000000,
+  "workplaceType": "hybrid",
+  "hostedUrl": "https://jobs.lever.co/betaco/aaaa-1",
+  "descriptionPlain": "Beta Co helps clinics forecast demand. You will design A/B tests and build forecasting models.",
+  "lists": [
+   {
+    "text": "What you'll need",
+    "content": "<li>Strong statistics and probability</li><li>Python (pandas, scikit-learn)</li><li>SQL</li><li>Experience with time series forecasting</li>"
+   },
+   {
+    "text": "Bonus points",
+    "content": "<li>Causal inference</li><li>dbt or Airflow</li>"
+   }
+  ],
+  "additionalPlain": "Benefits include health insurance and a learning budget."
+ }
+]

@@ -1,0 +1,17 @@
+{
+ "apiVersion": "1",
+ "jobs": [
+  {
+   "id": "gm-1",
+   "title": "Applied AI Engineer",
+   "location": "Remote - Brazil",
+   "secondaryLocations": [],
+   "isRemote": true,
+   "workplaceType": "Remote",
+   "publishedAt": "2026-11-10T12:00:00Z",
+   "jobUrl": "https://jobs.ashbyhq.com/gammaai/gm-1",
+   "isListed": true,
+   "descriptionPlain": "Gamma AI builds document automation.\n\nWhat you will do\n- Ship LLM features to production using the OpenAI API and LangChain\n- Write evals to measure quality\n\nRequirements\n- Python and TypeScript\n- REST APIs with FastAPI\n- AWS\n\nNice to have\n- MCP\n- Experience with Terraform"
+  }
+ ]
+}

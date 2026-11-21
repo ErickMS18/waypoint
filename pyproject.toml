@@ -1,0 +1,39 @@
+[build-system]
+requires = ["hatchling>=1.21"]
+build-backend = "hatchling.build"
+
+[project]
+name = "rota"
+version = "0.1.0"
+description = "Personal career radar: reads public job postings for your target roles, extracts skills with an LLM, compares them with your resume and builds a focus-weighted study plan."
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+authors = [{ name = "Erick Maestri de Souza" }]
+dependencies = [
+  "httpx>=0.27",
+  "pydantic>=2.6",
+  "typer>=0.12",
+  "pyyaml>=6.0",
+  "python-dotenv>=1.0",
+  "jinja2>=3.1",
+  "beautifulsoup4>=4.12",
+  "pypdf>=4.0",
+  "python-docx>=1.1",
+  "pandas>=2.1",
+  "matplotlib>=3.8",
+  "streamlit>=1.35",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0"]
+
+[project.scripts]
+rota = "rota.cli:app"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/rota"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"

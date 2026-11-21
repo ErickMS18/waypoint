@@ -1,0 +1,24 @@
+{
+ "comments": "",
+ "totalCount": 1,
+ "offset": 0,
+ "limit": 20,
+ "jobs": [
+  {
+   "title": "Senior Machine Learning Engineer",
+   "companyName": "Delta Remote",
+   "companySlug": "delta-remote",
+   "seniority": [
+    "Senior"
+   ],
+   "locationRestrictions": [
+    "Brazil",
+    "Argentina"
+   ],
+   "pubDate": 1762300000,
+   "applicationLink": "https://himalayas.app/companies/delta-remote/jobs/senior-mle-1?utm_source=x",
+   "guid": "https://himalayas.app/companies/delta-remote/jobs/senior-mle-1",
+   "description": "<p>Delta Remote builds fraud models for fintechs across Latin America and we need a senior ML engineer to lead model delivery.</p><p>We need a senior ML engineer.</p><p>Requirements: 6+ years with Python, PyTorch, MLOps, MLflow, Docker and Kubernetes on GCP. English required.</p><p>It's a plus: Spark.</p>"
+  }
+ ]
+}

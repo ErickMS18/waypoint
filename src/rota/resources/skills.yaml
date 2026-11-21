@@ -1,0 +1,146 @@
+# Canonical skill taxonomy used to normalize what the LLM extracts and by the
+# dictionary baseline. id: stable key | name: display name | cat: category
+# aliases: case-insensitive whole-word matches (PT and EN) | regex: extra pattern
+# effort: rough hours to reach "usable in a project" level (for plan estimates)
+categories:
+  language: Programming languages
+  ml: Machine learning
+  dl: Deep learning
+  genai: GenAI / LLMs
+  nlp: NLP
+  cv: Computer vision
+  stats: Statistics & experimentation
+  data: Data processing & engineering
+  db: Databases
+  cloud: Cloud
+  mlops: MLOps & deployment
+  eng: Software engineering
+  bi: BI & visualization
+  math: Math
+  spoken: Spoken languages
+  soft: Soft skills
+
+skills:
+  # ---- languages ----
+  - {id: python, name: Python, cat: language, aliases: [python, python3], effort: 40}
+  - {id: sql, name: SQL, cat: language, aliases: [sql, t-sql, tsql, pl/sql], effort: 30}
+  - {id: r, name: R, cat: language, aliases: [r language, linguagem r, rstudio, tidyverse], regex: '(?:\bPython\s*(?:/|,|or|ou|and|e)\s*R\b|\bR\s*(?:/|,|or|ou|and|e)\s*Python\b)', effort: 40}
+  - {id: java, name: Java, cat: language, aliases: [java], effort: 60}
+  - {id: scala, name: Scala, cat: language, aliases: [scala], effort: 60}
+  - {id: go, name: Go, cat: language, aliases: [golang], regex: '\bGo\b(?=\s*(?:,|/|\(|and|or|e|ou)\s*(?:Python|Java|Rust|C\+\+|Scala|Kotlin))|(?<=Python, )\bGo\b|(?<=Python/)Go\b', effort: 50}
+  - {id: rust, name: Rust, cat: language, aliases: [rust], effort: 80}
+  - {id: cpp, name: C++, cat: language, aliases: [c++, cpp], effort: 80}
+  - {id: typescript, name: TypeScript, cat: language, aliases: [typescript], effort: 30}
+  - {id: javascript, name: JavaScript, cat: language, aliases: [javascript, node.js, nodejs], canon: [node], effort: 30}
+  - {id: bash, name: Shell/Bash, cat: language, aliases: [bash, shell scripting, shell script], effort: 15}
+
+  # ---- classic ML ----
+  - {id: machine_learning, name: Machine Learning, cat: ml, aliases: [machine learning, aprendizado de máquina, aprendizagem de máquina, ml models, modelos de ml], effort: 80}
+  - {id: scikit_learn, name: scikit-learn, cat: ml, aliases: [scikit-learn, scikit learn, sklearn], effort: 25}
+  - {id: xgboost, name: Gradient boosting (XGBoost/LightGBM/CatBoost), cat: ml, aliases: [xgboost, lightgbm, catboost, gradient boosting, boosting], effort: 15}
+  - {id: feature_engineering, name: Feature engineering, cat: ml, aliases: [feature engineering, engenharia de features, engenharia de atributos, feature store, feature stores], effort: 25}
+  - {id: model_evaluation, name: Model evaluation & validation, cat: ml, aliases: [model evaluation, avaliação de modelos, cross-validation, validação cruzada, model validation, validação de modelos], effort: 20}
+  - {id: recommender_systems, name: Recommender systems, cat: ml, aliases: [recommender systems, recommendation systems, sistemas de recomendação, recommendation engines], effort: 40}
+  - {id: time_series, name: Time series & forecasting, cat: ml, aliases: [time series, séries temporais, series temporais, forecasting, previsão de demanda], effort: 35}
+  - {id: anomaly_detection, name: Anomaly/fraud detection, cat: ml, aliases: [anomaly detection, detecção de anomalias, fraud detection, detecção de fraude, prevenção a fraudes], effort: 30}
+  - {id: clustering, name: Clustering & segmentation, cat: ml, aliases: [clustering, clusterização, segmentação de clientes, customer segmentation], effort: 15}
+  - {id: reinforcement_learning, name: Reinforcement learning, cat: ml, aliases: [reinforcement learning, aprendizado por reforço, rlhf], effort: 60}
+  - {id: optimization, name: Optimization (OR), cat: ml, aliases: [mathematical optimization, otimização matemática, operations research, pesquisa operacional, linear programming, programação linear], effort: 40}
+
+  # ---- deep learning ----
+  - {id: deep_learning, name: Deep learning, cat: dl, aliases: [deep learning, aprendizado profundo, neural networks, redes neurais], effort: 60}
+  - {id: pytorch, name: PyTorch, cat: dl, aliases: [pytorch, torch], effort: 40}
+  - {id: tensorflow, name: TensorFlow/Keras, cat: dl, aliases: [tensorflow, keras], effort: 40}
+  - {id: jax, name: JAX, cat: dl, aliases: [jax], effort: 40}
+  - {id: transformers, name: Transformers / Hugging Face, cat: dl, aliases: [transformers, hugging face, huggingface, transformer models, transformer architecture], effort: 30}
+  - {id: gpu_training, name: GPU / distributed training, cat: dl, aliases: [cuda, distributed training, treinamento distribuído, multi-gpu, deepspeed, fsdp, triton], effort: 50}
+
+  # ---- GenAI / LLMs ----
+  - {id: llms, name: LLMs, cat: genai, aliases: [llm, llms, large language models, large language model, modelos de linguagem, generative ai, genai, gen ai, ia generativa, foundation models], effort: 40}
+  - {id: rag, name: RAG, cat: genai, aliases: [rag, retrieval-augmented generation, retrieval augmented generation, geração aumentada por recuperação], effort: 25}
+  - {id: prompt_engineering, name: Prompt engineering, cat: genai, aliases: [prompt engineering, engenharia de prompt, prompting, prompt design], effort: 10}
+  - {id: fine_tuning, name: LLM fine-tuning, cat: genai, aliases: [fine-tuning, fine tuning, finetuning, lora, qlora, peft, instruction tuning, sft], effort: 35}
+  - {id: ai_agents, name: AI agents & tool use, cat: genai, aliases: [ai agents, agentes de ia, llm agents, agentic, agentic workflows, agentic systems, agentic ai, multi-agent, function calling, tool use, tool calling], canon: [agents], effort: 30}
+  - {id: langchain, name: LangChain / LangGraph, cat: genai, aliases: [langchain, langgraph], effort: 15}
+  - {id: llamaindex, name: LlamaIndex, cat: genai, aliases: [llamaindex, llama index, llama-index], effort: 10}
+  - {id: vector_db, name: Vector databases, cat: genai, aliases: [vector database, vector databases, vector db, vector store, banco vetorial, bancos vetoriais, pinecone, weaviate, qdrant, chroma, chromadb, pgvector, milvus, faiss], effort: 15}
+  - {id: embeddings, name: Embeddings & semantic search, cat: genai, aliases: [embeddings, embedding, semantic search, busca semântica, vector search], effort: 15}
+  - {id: llm_evaluation, name: LLM evaluation (evals), cat: genai, aliases: [llm evaluation, evals, avaliação de llms, llm evals, llm-as-a-judge, llm as a judge, ragas], effort: 20}
+  - {id: llm_apis, name: LLM APIs (OpenAI/Anthropic/Gemini), cat: genai, aliases: [openai api, anthropic api, gemini api, azure openai, bedrock, amazon bedrock, vertex ai], canon: [openai, anthropic, claude, gemini, gpt, gpt-4, llm api, llm apis], effort: 10}
+  - {id: mcp, name: Model Context Protocol (MCP), cat: genai, aliases: [mcp, model context protocol], effort: 10}
+  - {id: llm_serving, name: LLM inference & serving, cat: genai, aliases: [vllm, tgi, llm inference, inference optimization, quantization, quantização, ollama, llama.cpp], effort: 30}
+  - {id: guardrails, name: LLM safety & guardrails, cat: genai, aliases: [guardrails, ai safety, responsible ai, ia responsável, red teaming], effort: 15}
+
+  # ---- NLP / CV ----
+  - {id: nlp, name: NLP, cat: nlp, aliases: [nlp, natural language processing, processamento de linguagem natural, pln, text mining, mineração de texto], effort: 40}
+  - {id: computer_vision, name: Computer vision, cat: cv, aliases: [computer vision, visão computacional, opencv, image processing, processamento de imagens, object detection, yolo], effort: 50}
+  - {id: speech_audio, name: Speech & audio ML, cat: nlp, aliases: [speech recognition, asr, text-to-speech, tts, audio processing, processamento de áudio], effort: 40}
+
+  # ---- statistics ----
+  - {id: statistics, name: Statistics, cat: stats, aliases: [statistics, estatística, estatistica, statistical analysis, análise estatística, statistical modeling, modelagem estatística, inferência estatística, hypothesis testing, testes de hipótese], effort: 60}
+  - {id: ab_testing, name: A/B testing & experimentation, cat: stats, aliases: [a/b testing, a/b tests, a/b test, testes a/b, teste a/b, experimentation, experimentação, experiment design, desenho de experimentos], effort: 20}
+  - {id: causal_inference, name: Causal inference, cat: stats, aliases: [causal inference, inferência causal, causal impact, uplift modeling, econometrics, econometria], effort: 40}
+  - {id: bayesian, name: Bayesian methods, cat: stats, aliases: [bayesian, bayesiana, bayesian statistics, pymc, stan], effort: 35}
+  - {id: probability, name: Probability, cat: math, aliases: [probability, probabilidade], effort: 30}
+  - {id: linear_algebra, name: Linear algebra & calculus, cat: math, aliases: [linear algebra, álgebra linear, calculus, cálculo], effort: 40}
+
+  # ---- data ----
+  - {id: pandas, name: pandas, cat: data, aliases: [pandas], effort: 20}
+  - {id: numpy, name: NumPy, cat: data, aliases: [numpy], effort: 10}
+  - {id: polars, name: Polars, cat: data, aliases: [polars], effort: 8}
+  - {id: spark, name: Spark / PySpark, cat: data, aliases: [spark, pyspark, apache spark, spark sql], effort: 30}
+  - {id: databricks, name: Databricks, cat: data, aliases: [databricks], effort: 15}
+  - {id: airflow, name: Airflow / orchestration, cat: data, aliases: [airflow, apache airflow, dagster, prefect, orquestração de pipelines], effort: 20}
+  - {id: dbt, name: dbt, cat: data, aliases: [dbt], effort: 15}
+  - {id: etl, name: ETL/ELT & data pipelines, cat: data, aliases: [etl, elt, data pipelines, data pipeline, pipelines de dados, pipeline de dados], effort: 25}
+  - {id: kafka, name: Kafka / streaming, cat: data, aliases: [kafka, apache kafka, kinesis, pub/sub, streaming data, flink], effort: 30}
+  - {id: data_modeling, name: Data modeling & warehousing, cat: data, aliases: [data modeling, modelagem de dados, data warehouse, data warehousing, dimensional modeling, modelagem dimensional, lakehouse, data lake], effort: 30}
+  - {id: data_quality, name: Data quality & governance, cat: data, aliases: [data quality, qualidade de dados, data governance, governança de dados, data lineage, lgpd, gdpr], effort: 20}
+  - {id: big_data, name: Big data, cat: data, aliases: [big data, hadoop, hive], effort: 30}
+
+  # ---- databases ----
+  - {id: postgresql, name: PostgreSQL, cat: db, aliases: [postgresql, postgres], effort: 15}
+  - {id: mysql, name: MySQL, cat: db, aliases: [mysql], effort: 10}
+  - {id: sql_server, name: SQL Server, cat: db, aliases: [sql server, mssql], effort: 15}
+  - {id: nosql, name: NoSQL (MongoDB, Cassandra...), cat: db, aliases: [nosql, mongodb, cassandra, dynamodb, redis, elasticsearch, opensearch], effort: 20}
+  - {id: bigquery, name: BigQuery, cat: db, aliases: [bigquery, big query], effort: 10}
+  - {id: snowflake, name: Snowflake, cat: db, aliases: [snowflake], effort: 10}
+  - {id: redshift_athena, name: Redshift / Athena, cat: db, aliases: [redshift, athena], effort: 10}
+
+  # ---- cloud ----
+  - {id: aws, name: AWS, cat: cloud, aliases: [aws, amazon web services, aws lambda, amazon s3], canon: [s3, ec2, lambda], effort: 40}
+  - {id: gcp, name: GCP, cat: cloud, aliases: [gcp, google cloud, google cloud platform], effort: 40}
+  - {id: azure, name: Azure, cat: cloud, aliases: [azure, microsoft azure, azure ml], effort: 40}
+  - {id: sagemaker, name: SageMaker, cat: cloud, aliases: [sagemaker, amazon sagemaker], effort: 15}
+
+  # ---- MLOps ----
+  - {id: mlops, name: MLOps, cat: mlops, aliases: [mlops, ml ops, ml platform, plataforma de ml, model deployment, deploy de modelos, deployment de modelos, models in production, modelos em produção], effort: 40}
+  - {id: mlflow, name: MLflow / experiment tracking, cat: mlops, aliases: [mlflow, weights & biases, weights and biases, wandb, experiment tracking, kubeflow], effort: 10}
+  - {id: model_monitoring, name: Model monitoring, cat: mlops, aliases: [model monitoring, monitoramento de modelos, data drift, model drift], canon: [drift], effort: 15}
+  - {id: docker, name: Docker, cat: mlops, aliases: [docker, containerization, containerização], canon: [containers, contêineres], effort: 15}
+  - {id: kubernetes, name: Kubernetes, cat: mlops, aliases: [kubernetes, k8s, eks, gke, aks], effort: 30}
+  - {id: ci_cd, name: CI/CD, cat: mlops, aliases: [ci/cd, ci cd, continuous integration, github actions, gitlab ci, jenkins], effort: 15}
+  - {id: terraform, name: Infrastructure as code, cat: mlops, aliases: [terraform, infrastructure as code, infraestrutura como código, iac, cloudformation], effort: 20}
+
+  # ---- software engineering ----
+  - {id: git, name: Git, cat: eng, aliases: [git, github, gitlab, version control, controle de versão, versionamento], effort: 10}
+  - {id: apis, name: REST APIs / FastAPI, cat: eng, aliases: [rest api, rest apis, restful, api rest, apis rest, fastapi, flask, django, microservices, microsserviços, grpc], effort: 20}
+  - {id: testing, name: Software testing, cat: eng, aliases: [unit testing, unit tests, testes unitários, testes automatizados, automated testing, pytest, tdd], effort: 15}
+  - {id: software_engineering, name: Software engineering practices, cat: eng, aliases: [software engineering, engenharia de software, clean code, design patterns, code review, production code, código de produção, system design], effort: 50}
+  - {id: linux, name: Linux, cat: eng, aliases: [linux, unix], effort: 15}
+  - {id: distributed_systems, name: Distributed systems, cat: eng, aliases: [distributed systems, sistemas distribuídos, scalable systems, sistemas escaláveis], effort: 60}
+  - {id: frontend, name: Frontend (React etc.), cat: eng, aliases: [react, frontend, front-end, next.js, nextjs, vue], effort: 30}
+
+  # ---- BI ----
+  - {id: power_bi, name: Power BI / DAX, cat: bi, aliases: [power bi, powerbi, dax], effort: 20}
+  - {id: tableau_looker, name: Tableau / Looker, cat: bi, aliases: [tableau, looker, looker studio, metabase, qlik], effort: 15}
+  - {id: data_visualization, name: Data visualization, cat: bi, aliases: [data visualization, visualização de dados, dashboards, dashboard, matplotlib, seaborn, plotly, streamlit], effort: 15}
+  - {id: excel, name: Excel, cat: bi, aliases: [excel, google sheets, planilhas], effort: 10}
+
+  # ---- spoken ----
+  - {id: english, name: English, cat: spoken, aliases: [english, inglês, ingles, fluent english, inglês avançado, inglês fluente], effort: 0}
+  - {id: spanish, name: Spanish, cat: spoken, aliases: [spanish, espanhol], effort: 0}
+
+  # ---- soft ----
+  - {id: communication, name: Communication & storytelling, cat: soft, aliases: [communication skills, data storytelling, stakeholder management, gestão de stakeholders, comunicação clara, strong communication], canon: [communication, comunicação, storytelling], effort: 0}
+  - {id: product_sense, name: Product/business sense, cat: soft, aliases: [product sense, business acumen, visão de negócio, visão de produto, business understanding], effort: 0}
