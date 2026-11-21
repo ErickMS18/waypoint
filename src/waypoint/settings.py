@@ -1,7 +1,7 @@
 """Project paths and configuration loading.
 
 The project root is the folder that contains ``config/targets.yaml``. It is found by
-walking up from the current directory, or set explicitly with the ``ROTA_HOME``
+walking up from the current directory, or set explicitly with the ``WAYPOINT_HOME``
 environment variable.
 """
 from __future__ import annotations
@@ -19,7 +19,7 @@ RESOURCES = Path(__file__).parent / "resources"
 
 
 def find_root(start: Path | None = None) -> Path:
-    env = os.environ.get("ROTA_HOME")
+    env = os.environ.get("WAYPOINT_HOME")
     if env:
         return Path(env).expanduser().resolve()
     here = (start or Path.cwd()).resolve()
@@ -27,8 +27,8 @@ def find_root(start: Path | None = None) -> Path:
         if (p / "config" / "targets.yaml").exists():
             return p
     raise FileNotFoundError(
-        "Could not find config/targets.yaml. Run rota from the project folder "
-        "or set ROTA_HOME to it."
+        "Could not find config/targets.yaml. Run waypoint from the project folder "
+        "or set WAYPOINT_HOME to it."
     )
 
 
@@ -46,7 +46,7 @@ class Paths:
 
     @property
     def db(self) -> Path:
-        return self.data / "rota.db"
+        return self.data / "waypoint.db"
 
     @property
     def profile(self) -> Path:

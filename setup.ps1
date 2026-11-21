@@ -11,10 +11,10 @@ if (-not (Test-Path ".venv")) {
 }
 & .\.venv\Scripts\python.exe -m pip install --upgrade pip | Out-Null
 & .\.venv\Scripts\python.exe -m pip install -e ".[dev]"
-& .\.venv\Scripts\rota.exe init
+& .\.venv\Scripts\waypoint.exe init
 
 Write-Host ""
 Write-Host "Pronto. Proximos passos:" -ForegroundColor Green
 Write-Host "  1. Ative o ambiente:   .\.venv\Scripts\Activate.ps1"
 Write-Host "  2. Coloque sua chave de LLM no arquivo .env (notepad .env)"
-Write-Host "  3. rota collect   ->   rota extract   ->   rota profile <seu_cv.pdf>   ->   rota ui"
+Write-Host "  3. waypoint collect   ->   waypoint extract   ->   waypoint profile <seu_cv.pdf>   ->   waypoint ui"

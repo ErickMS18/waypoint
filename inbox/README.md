@@ -12,4 +12,4 @@ location: Remote - Brazil
 <paste the full posting text here>
 ```
 
-`rota collect` ingests every file in this folder. Everything here except this README is git-ignored.
+`waypoint collect` ingests every file in this folder. Everything here except this README is git-ignored.

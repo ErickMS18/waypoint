@@ -4,8 +4,8 @@ from pathlib import Path
 
 import pytest
 
-from rota.eval import GoldItem, evaluate, load_gold, results_markdown, stratified_sample, update_readme
-from rota.models import Job, JobExtraction, SkillMention
+from waypoint.eval import GoldItem, evaluate, load_gold, results_markdown, stratified_sample, update_readme
+from waypoint.models import Job, JobExtraction, SkillMention
 
 REPO = Path(__file__).resolve().parents[1]
 
@@ -60,8 +60,8 @@ def test_update_readme(tmp_path):
 
 
 # ---------------------------------------------------------------- privacy
-SENSITIVE = [".env", "config/sources.local.yaml", "data/rota.db", "data/eval/texts.jsonl", "profile/profile.json", "profile/overrides.yaml",
-             "profile/resume_redacted.txt", "reports/rota_report.md", "reports/public/market_report.md",
+SENSITIVE = [".env", "config/sources.local.yaml", "data/waypoint.db", "data/eval/texts.jsonl", "profile/profile.json", "profile/overrides.yaml",
+             "profile/resume_redacted.txt", "reports/waypoint_report.md", "reports/public/market_report.md",
              "inbox/vaga.txt"]
 
 
@@ -98,9 +98,9 @@ def test_no_personal_files_tracked():
 def test_cli_eval_end_to_end(cfg, db, transport):
     """sample -> (gold written by an annotator) -> run, baseline only, offline."""
     from typer.testing import CliRunner
-    from rota.cli import app
-    from rota.collect import collect
-    from rota.eval import load_jsonl, write_jsonl
+    from waypoint.cli import app
+    from waypoint.collect import collect
+    from waypoint.eval import load_jsonl, write_jsonl
     collect(cfg, db, transport=transport)
     r = CliRunner().invoke(app, ["eval", "sample", "--n", "4"])
     assert r.exit_code == 0, r.output
@@ -117,7 +117,7 @@ def test_cli_eval_end_to_end(cfg, db, transport):
 
 
 def test_local_config_override(project):
-    from rota.settings import load_config
+    from waypoint.settings import load_config
     (project / "config" / "sources.local.yaml").write_text("gupy:\n  enabled: true\n", encoding="utf-8")
     cfg = load_config(project)
     assert cfg.sources["gupy"]["enabled"] is True and cfg.sources["gupy"]["max_pages"] == 2

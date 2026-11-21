@@ -2,7 +2,7 @@
 
 Gold labels live in eval/gold.jsonl (committed: labels + job ids/URLs only).
 Posting texts live in data/eval/texts.jsonl (local, git-ignored) and can be
-re-downloaded from the public APIs with `rota eval fetch`.
+re-downloaded from the public APIs with `waypoint eval fetch`.
 """
 from __future__ import annotations
 

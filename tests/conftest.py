@@ -9,8 +9,8 @@ import httpx
 import pytest
 import yaml
 
-from rota.db import DB
-from rota.settings import load_config
+from waypoint.db import DB
+from waypoint.settings import load_config
 
 REPO = Path(__file__).resolve().parents[1]
 FIX = Path(__file__).parent / "fixtures"
@@ -65,7 +65,7 @@ def project(tmp_path: Path, monkeypatch) -> Path:
         "title: Engenheira de Machine Learning\ncompany: Loja X\n---\n"
         "Procuramos pessoa para criar modelos de recomendação. Requisitos: Python, PySpark e AWS. "
         "Diferenciais: experiência com MLflow. " * 3, encoding="utf-8")
-    monkeypatch.setenv("ROTA_HOME", str(tmp_path))
+    monkeypatch.setenv("WAYPOINT_HOME", str(tmp_path))
     for k in ("LLM_PROVIDER", "GEMINI_API_KEY", "ANTHROPIC_API_KEY", "OPENAI_API_KEY", "LLM_MODEL", "LLM_MIN_INTERVAL"):
         monkeypatch.delenv(k, raising=False)
     return tmp_path

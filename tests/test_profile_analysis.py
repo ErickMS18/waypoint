@@ -1,12 +1,12 @@
 import json
 from pathlib import Path
 
-from rota.analysis.gap import gap_table, market_fit
-from rota.analysis.plan import build_plan, split_hours
-from rota.collect import collect
-from rota.extract import run_extraction
-from rota.pipeline import analyze, compute_gap, make_plan, make_report
-from rota.profile import (build_profile, effective_levels, extract_profile_baseline, redact, save_overrides)
+from waypoint.analysis.gap import gap_table, market_fit
+from waypoint.analysis.plan import build_plan, split_hours
+from waypoint.collect import collect
+from waypoint.extract import run_extraction
+from waypoint.pipeline import analyze, compute_gap, make_plan, make_report
+from waypoint.profile import (build_profile, effective_levels, extract_profile_baseline, redact, save_overrides)
 
 RESUME = """Maria Fictícia da Silva
 Cientista de Dados | Python

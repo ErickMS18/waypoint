@@ -1,4 +1,4 @@
-"""Command-line interface: `rota --help`."""
+"""Command-line interface: `waypoint --help`."""
 from __future__ import annotations
 
 import json
@@ -19,7 +19,7 @@ from .extract import extract_baseline, extract_llm, run_extraction
 from .llm import LLMNotConfigured, make_client
 from .settings import Config, load_config
 
-app = typer.Typer(add_completion=False, help="Rota — radar de carreira pessoal (v1).", no_args_is_help=True)
+app = typer.Typer(add_completion=False, help="Waypoint — radar de carreira pessoal (v1).", no_args_is_help=True)
 eval_app = typer.Typer(help="Avaliação da extração de skills (conjunto rotulado).", no_args_is_help=True)
 boards_app = typer.Typer(help="Empresas/boards configurados em config/sources.yaml.", no_args_is_help=True)
 app.add_typer(eval_app, name="eval")
@@ -138,7 +138,7 @@ def profile(resume: Path = typer.Argument(..., exists=True, help="Seu currículo
     typer.secho(f"Perfil com {len(prof.skills)} skills ({prof.method}) salvo em {cfg.paths.profile}", fg="green")
     for s in prof.skills[:30]:
         typer.echo(f"  {'●' * s.level}{'○' * (3 - s.level)}  {s.name}")
-    typer.echo("Ajuste níveis na interface (rota ui) ou em profile/overrides.yaml.")
+    typer.echo("Ajuste níveis na interface (waypoint ui) ou em profile/overrides.yaml.")
 
 
 @app.command()
@@ -165,7 +165,7 @@ def report(public: bool = typer.Option(False, help="Só dados de mercado, sem se
     ex = _resolve_extractor(db, extractor)
     a = run_analyze(cfg, db, ex)
     if a.jobs_df.empty:
-        typer.secho("Nenhuma vaga extraída ainda. Rode `rota collect` e `rota extract`.", fg="red")
+        typer.secho("Nenhuma vaga extraída ainda. Rode `waypoint collect` e `waypoint extract`.", fg="red")
         raise typer.Exit(1)
     gap = plan = None
     if not public:
@@ -262,7 +262,7 @@ def eval_run(extractor: str = typer.Option("both", help="both | llm | baseline")
                                lang=r.get("lang", "en"), role=r.get("role", ""))
              for r in load_jsonl(cfg.paths.eval_data / "texts.jsonl")}
     if not texts:
-        typer.secho("Sem textos locais. Rode `rota eval fetch` antes.", fg="red")
+        typer.secho("Sem textos locais. Rode `waypoint eval fetch` antes.", fg="red")
         raise typer.Exit(1)
     results, out_dir = {}, cfg.paths.eval_dir / "results"
     out_dir.mkdir(exist_ok=True)

@@ -2,12 +2,12 @@
 # Board/site = o pedaço da URL de carreiras da empresa:
 #   Greenhouse: boards.greenhouse.io/<board>      Lever: jobs.lever.co/<site>
 #   Ashby:      jobs.ashbyhq.com/<board>
-# Rode `rota boards check` para validar a lista (boards inexistentes são ignorados na coleta).
+# Rode `waypoint boards check` para validar a lista (boards inexistentes são ignorados na coleta).
 
 http:
   delay_seconds: 1.0        # pausa entre requisições ao mesmo host
   timeout_seconds: 30
-  user_agent: "rota/0.1 (personal career research; +https://github.com/ErickMS18/rota)"
+  user_agent: "waypoint/0.1 (personal career research; +https://github.com/ErickMS18/waypoint)"
 
 greenhouse:
   enabled: true

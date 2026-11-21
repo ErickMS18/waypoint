@@ -20,7 +20,7 @@ from typing import Any, Callable, Optional, TypeVar
 import httpx
 from pydantic import BaseModel, ValidationError
 
-log = logging.getLogger("rota.llm")
+log = logging.getLogger("waypoint.llm")
 T = TypeVar("T", bound=BaseModel)
 
 DEFAULT_MODELS = {

@@ -14,7 +14,7 @@ from .settings import Config
 from .sources import Posting, build_sources, parse_manual
 from .textutil import fold, guess_lang
 
-log = logging.getLogger("rota.collect")
+log = logging.getLogger("waypoint.collect")
 
 
 @dataclass
@@ -31,7 +31,7 @@ class CollectStats:
 
 def make_http(cfg: Config, transport=None) -> Http:
     h = cfg.sources.get("http", {})
-    return Http(user_agent=h.get("user_agent", "rota/0.1"), delay=float(h.get("delay_seconds", 1.0)),
+    return Http(user_agent=h.get("user_agent", "waypoint/0.1"), delay=float(h.get("delay_seconds", 1.0)),
                 timeout=float(h.get("timeout_seconds", 30)), transport=transport)
 
 

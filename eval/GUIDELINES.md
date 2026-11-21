@@ -22,7 +22,7 @@ so the task is well defined for both).
 - If a skill appears both ways, `required` wins.
 
 ## Vocabulary
-- Labels use only the ids in `src/rota/resources/skills.yaml` (closed vocabulary).
+- Labels use only the ids in `src/waypoint/resources/skills.yaml` (closed vocabulary).
   A skill outside the taxonomy is left unlabeled and noted in `notes`; the extractor's
   unmapped predictions are reported separately as "unmapped rate".
 - Umbrella vs. specific: label what is written. "Experience with AWS (S3, Lambda)" → `aws`;
@@ -39,11 +39,11 @@ If the title is silent, use the minimum years required: 0–1 `junior`, 2–4 `m
 8+ `staff_plus`. Otherwise `unknown` (excluded from seniority accuracy).
 
 ## Process and honesty notes
-- Postings are sampled with `rota eval sample` (stratified by role and language, max 3 per
+- Postings are sampled with `waypoint eval sample` (stratified by role and language, max 3 per
   company) from real collections — never hand-picked.
 - Labels are written **before** looking at any extractor output for that posting.
 - Only labels and posting ids/URLs are committed (`eval/gold.jsonl`); the posting texts stay
-  local (`data/eval/texts.jsonl`) and can be re-downloaded with `rota eval fetch` while the
+  local (`data/eval/texts.jsonl`) and can be re-downloaded with `waypoint eval fetch` while the
   postings are online.
 - Who labeled is recorded in each line (`annotator`). Labels drafted with AI assistance are
   marked as such and must be reviewed by a human before results are published.

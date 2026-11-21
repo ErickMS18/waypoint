@@ -1,5 +1,5 @@
 # Focos e pesos. O plano divide suas horas semanais por estes pesos.
-# Nada aqui é "irrelevante": quando houver conflito, o Rota mostra o trade-off e pergunta.
+# Nada aqui é "irrelevante": quando houver conflito, o Waypoint mostra o trade-off e pergunta.
 
 weekly_hours: 10            # horas por semana que você quer dedicar a estudo/projetos pessoais
 
@@ -13,4 +13,4 @@ exploration:
   topics: []                # ex.: ["Rust", "visão computacional", "agentes com MCP"]
   include_emerging: true    # sugere skills emergentes do mercado como opções de exploração
 
-interests: []               # ex.: ["violão", "astronomia"] — o Rota sugere pontes com a carreira
+interests: []               # ex.: ["violão", "astronomia"] — o Waypoint sugere pontes com a carreira

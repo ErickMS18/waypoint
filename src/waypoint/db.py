@@ -1,4 +1,4 @@
-"""Local SQLite storage (data/rota.db — git-ignored)."""
+"""Local SQLite storage (data/waypoint.db — git-ignored)."""
 from __future__ import annotations
 
 import json

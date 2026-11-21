@@ -1,13 +1,13 @@
-# 🧭 Rota — a personal career radar
+# 🧭 Waypoint — a personal career radar
 
-[![tests](https://github.com/ErickMS18/rota/actions/workflows/tests.yml/badge.svg)](https://github.com/ErickMS18/rota/actions/workflows/tests.yml)
+[![tests](https://github.com/ErickMS18/waypoint/actions/workflows/tests.yml/badge.svg)](https://github.com/ErickMS18/waypoint/actions/workflows/tests.yml)
 ![python](https://img.shields.io/badge/python-3.11%2B-blue)
 ![license](https://img.shields.io/badge/license-MIT-green)
 
-**Rota reads the job market for the roles you want, tells you what you already have and what is
+**Waypoint reads the job market for the roles you want, tells you what you already have and what is
 missing, and turns that into a weekly plan that respects more than just your career.**
 
-You pick target roles (e.g. *AI/ML Engineer* and *Data Scientist*). Rota collects real postings
+You pick target roles (e.g. *AI/ML Engineer* and *Data Scientist*). Waypoint collects real postings
 from public job-board APIs, uses an LLM to extract required vs. nice-to-have skills and seniority,
 compares them with your resume and produces:
 
@@ -35,7 +35,7 @@ flowchart LR
       IN["inbox/<br/>postings you paste"]
       GP["Gupy<br/>opt-in, off by default"]
     end
-    Sources --> N["Normalize · role filter by title regex · dedupe"] --> DB[("SQLite<br/>data/rota.db")]
+    Sources --> N["Normalize · role filter by title regex · dedupe"] --> DB[("SQLite<br/>data/waypoint.db")]
     DB --> X{Extractor}
     X -->|"LLM (JSON validated, cached)"| C[Canonicalize to a 96-skill taxonomy]
     X -->|dictionary baseline| C
@@ -74,22 +74,22 @@ Posting texts are stored only in your local database; the repository and the pub
 ## Quickstart (Windows / PowerShell)
 
 ```powershell
-git clone https://github.com/ErickMS18/rota.git
-cd rota
+git clone https://github.com/ErickMS18/waypoint.git
+cd waypoint
 python -m venv .venv
 .\.venv\Scripts\Activate.ps1
 pip install -e ".[dev]"
 
-rota init                      # creates data/, profile/, reports/ and .env
+waypoint init                      # creates data/, profile/, reports/ and .env
 notepad .env                   # paste ONE LLM key (Gemini has a free tier)
 
-rota boards check              # optional: which configured companies exist / have jobs
-rota collect                   # fetch postings for your target roles
-rota extract                   # LLM extraction (use --extractor baseline for no-LLM mode)
-rota profile C:\path\to\resume.pdf
-rota report                    # reports/rota_report.md (private) + charts
-rota report --public           # reports/public/ (market only, safe to share)
-rota ui                        # local web app
+waypoint boards check              # optional: which configured companies exist / have jobs
+waypoint collect                   # fetch postings for your target roles
+waypoint extract                   # LLM extraction (use --extractor baseline for no-LLM mode)
+waypoint profile C:\path\to\resume.pdf
+waypoint report                    # reports/waypoint_report.md (private) + charts
+waypoint report --public           # reports/public/ (market only, safe to share)
+waypoint ui                        # local web app
 ```
 
 macOS/Linux: same commands, activate with `source .venv/bin/activate`.
@@ -113,7 +113,7 @@ actual collections (stratified by role and language, at most 3 per company). Lab
 "F1 incl. required/nice" only counts a hit if the requirement level also matches.
 
 **How the gold set was built (read before trusting the numbers):**
-- 40 postings drawn by `rota eval sample` (seed 42) from a real collection on 2026-11-21: 20 AI/ML Engineer + 20 Data Scientist; 20 in English and 20 detected as Portuguese (one of them is in Spanish).
+- 40 postings drawn by `waypoint eval sample` (seed 42) from a real collection on 2026-11-21: 20 AI/ML Engineer + 20 Data Scientist; 20 in English and 20 detected as Portuguese (one of them is in Spanish).
 - The skill taxonomy was frozen *before* labeling and has not been tuned on these postings.
 - Labels were drafted by an AI assistant (Claude) following the guidelines, without seeing any extractor output, and are marked `pending human review` in `eval/gold.jsonl`. A human review pass is planned; results will be re-run after it.
 - Scoring is closed-vocabulary, which favors the dictionary baseline (it can only ever predict taxonomy skills). The LLM's advantage shows up in skills that are described rather than named ("communicate clearly", "monitor models in production").
@@ -137,8 +137,8 @@ Skill F1 by posting language:
 Reproduce:
 
 ```powershell
-rota eval fetch                 # re-downloads the gold postings that are still online
-rota eval run --update-readme   # baseline + LLM, writes eval/RESULTS.md and eval/results/*.json
+waypoint eval fetch                 # re-downloads the gold postings that are still online
+waypoint eval run --update-readme   # baseline + LLM, writes eval/RESULTS.md and eval/results/*.json
 ```
 
 The repository contains only labels and posting ids/URLs (`eval/gold.jsonl`), never the posting texts.
@@ -148,7 +148,7 @@ The repository contains only labels and posting ids/URLs (`eval/gold.jsonl`), ne
 - `.env`, `data/`, `profile/`, `reports/` and `inbox/*` are git-ignored, and
   `tests/test_eval_privacy.py` fails if any of them stops being ignored or gets tracked.
 - Before your resume goes to the LLM, the first line (name), e-mails, phone numbers, links and document
-  numbers are removed (`profile/resume_redacted.txt` shows exactly what was sent). `rota profile --no-llm`
+  numbers are removed (`profile/resume_redacted.txt` shows exactly what was sent). `waypoint profile --no-llm`
   sends nothing.
 - On free LLM tiers the provider may use requests to improve its products; use a paid key or a local model
   (`LLM_PROVIDER=openai_compatible` + Ollama) if that matters to you.
@@ -156,7 +156,7 @@ The repository contains only labels and posting ids/URLs (`eval/gold.jsonl`), ne
 ## Project layout
 
 ```
-src/rota/
+src/waypoint/
   sources/        Greenhouse, Lever, Ashby, Himalayas, Gupy, manual inbox
   llm/            provider-agnostic JSON client (retries, throttling, cache)
   extract/        LLM prompt + dictionary baseline + canonicalization

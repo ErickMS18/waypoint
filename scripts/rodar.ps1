@@ -1,4 +1,4 @@
-# Rota: one-click run on Windows (called by RODAR_ROTA.bat).
+# Waypoint: one-click run on Windows (called by RODAR_WAYPOINT.bat).
 # Sets up the environment if needed, then: collect -> extract -> profile -> eval -> reports -> tests.
 # Everything it prints also goes to data\logs\ultima_execucao.log.
 $ErrorActionPreference = "Continue"
@@ -9,7 +9,7 @@ $env:PYTHONUNBUFFERED = "1"
 Set-Location (Split-Path $PSScriptRoot -Parent)
 New-Item -ItemType Directory -Force "data\logs" | Out-Null
 $log = "data\logs\ultima_execucao.log"
-Set-Content -Path $log -Value "Rota - $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')" -Encoding UTF8
+Set-Content -Path $log -Value "Waypoint - $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')" -Encoding UTF8
 Remove-Item "data\logs\FIM.txt" -ErrorAction SilentlyContinue
 
 function Say([string]$msg) {
@@ -38,7 +38,7 @@ if (-not $exe) {
 $ver = & $exe @pre -c "import sys; print('%d.%d' % sys.version_info[:2])" 2>&1
 Say "Python encontrado: $exe $pre -> $ver"
 if ([version]"$ver" -lt [version]"3.11") {
-    Say "ERRO: o Rota precisa do Python 3.11 ou mais novo (achei $ver)."
+    Say "ERRO: o Waypoint precisa do Python 3.11 ou mais novo (achei $ver)."
     Set-Content "data\logs\FIM.txt" "ERRO versao python" -Encoding UTF8
     Read-Host "Pressione Enter para fechar"; exit 1
 }
@@ -47,8 +47,8 @@ if ([version]"$ver" -lt [version]"3.11") {
 if (-not (Test-Path ".venv\Scripts\python.exe")) { Run "Criando ambiente virtual" $exe ($pre + @("-m", "venv", ".venv")) }
 $vpy = (Resolve-Path ".venv\Scripts\python.exe").Path
 Run "Instalando dependencias" $vpy @("-m", "pip", "install", "-q", "--disable-pip-version-check", "-e", ".[dev]")
-$rota = (Resolve-Path ".venv\Scripts\rota.exe").Path
-Run "rota init" $rota @("init")
+$wp = (Resolve-Path ".venv\Scripts\waypoint.exe").Path
+Run "waypoint init" $wp @("init")
 
 $hasKey = $false
 if (Test-Path ".env") {
@@ -58,10 +58,10 @@ Say "Chave de LLM no .env: $hasKey"
 $noLlm = @(); if (-not $hasKey) { $noLlm = @("--no-llm") }
 
 # ---------- pipeline ----------
-Run "Empresas configuradas" $rota @("boards", "check")
-Run "Coleta de vagas" $rota @("collect")
-if ($hasKey) { Run "Extracao (LLM)" $rota @("extract") }
-Run "Extracao (baseline por dicionario)" $rota @("extract", "--extractor", "baseline")
+Run "Empresas configuradas" $wp @("boards", "check")
+Run "Coleta de vagas" $wp @("collect")
+if ($hasKey) { Run "Extracao (LLM)" $wp @("extract") }
+Run "Extracao (baseline por dicionario)" $wp @("extract", "--extractor", "baseline")
 
 $needProfile = -not (Test-Path "profile\profile.json")
 if (-not $needProfile -and $hasKey) {
@@ -70,18 +70,18 @@ if (-not $needProfile -and $hasKey) {
 }
 if ($needProfile) {
     $cv = Get-ChildItem -Path "profile" -Include *.pdf, *.docx -File -Recurse | Select-Object -First 1
-    if ($cv) { Run "Perfil a partir do curriculo" $rota (@("profile", $cv.FullName) + $noLlm) }
+    if ($cv) { Run "Perfil a partir do curriculo" $wp (@("profile", $cv.FullName) + $noLlm) }
     else { Say "Sem curriculo em profile\ (coloque um .pdf ou .docx la)." }
 }
 
-if (-not (Test-Path "data\eval\texts.jsonl")) { Run "Amostra para avaliacao" $rota @("eval", "sample", "--n", "40") }
+if (-not (Test-Path "data\eval\texts.jsonl")) { Run "Amostra para avaliacao" $wp @("eval", "sample", "--n", "40") }
 if (Test-Path "eval\gold.jsonl") {
     $evalArgs = @("eval", "run", "--update-readme"); if (-not $hasKey) { $evalArgs += @("--extractor", "baseline") }
-    Run "Avaliacao" $rota $evalArgs
+    Run "Avaliacao" $wp $evalArgs
 }
 
-Run "Relatorio privado" $rota (@("report") + $noLlm)
-Run "Relatorio publico" $rota @("report", "--public")
+Run "Relatorio privado" $wp (@("report") + $noLlm)
+Run "Relatorio publico" $wp @("report", "--public")
 Run "Testes automaticos" $vpy @("-m", "pytest", "-q")
 
 Set-Content "data\logs\FIM.txt" "OK $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')" -Encoding UTF8

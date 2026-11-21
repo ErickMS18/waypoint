@@ -1,6 +1,6 @@
-from rota.collect import add_manual, collect
-from rota.sources import Greenhouse, Lever
-from rota.http import Http
+from waypoint.collect import add_manual, collect
+from waypoint.sources import Greenhouse, Lever
+from waypoint.http import Http
 
 
 def test_collect_all_sources(cfg, db, transport):
@@ -48,9 +48,9 @@ def test_add_manual_dedupes(cfg, db):
 
 
 def test_near_duplicates_and_pruning(cfg, db):
-    from rota.collect import prune_unmatched
-    from rota.models import Job
-    from rota.roles import RoleMatcher
+    from waypoint.collect import prune_unmatched
+    from waypoint.models import Job
+    from waypoint.roles import RoleMatcher
     base = "We build ML systems. Requirements: Python, PyTorch, Docker, AWS and five years of experience. " * 8
     a = Job(job_key="g:x:1", source="greenhouse", external_id="1", company="Acme", title="Applied AI Engineer",
             location="Tokyo", text=base + " Location Tokyo.")
@@ -64,8 +64,8 @@ def test_near_duplicates_and_pruning(cfg, db):
 def test_gupy_fetches_full_description_when_summary_is_short():
     import json as _json
     import httpx
-    from rota.http import Http
-    from rota.sources import Gupy
+    from waypoint.http import Http
+    from waypoint.sources import Gupy
     page = ('<html><script id="__NEXT_DATA__" type="application/json">' + _json.dumps({"props": {"pageProps": {"job": {
         "description": "<p>Time de dados de crédito.</p>" * 5,
         "prerequisites": "<ul><li>Python e SQL</li><li>Estatística</li></ul>" * 5}}}}) + "</script></html>")

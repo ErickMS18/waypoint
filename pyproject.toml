@@ -3,7 +3,7 @@ requires = ["hatchling>=1.21"]
 build-backend = "hatchling.build"
 
 [project]
-name = "rota"
+name = "waypoint"
 version = "0.1.0"
 description = "Personal career radar: reads public job postings for your target roles, extracts skills with an LLM, compares them with your resume and builds a focus-weighted study plan."
 readme = "README.md"
@@ -29,10 +29,10 @@ dependencies = [
 dev = ["pytest>=8.0"]
 
 [project.scripts]
-rota = "rota.cli:app"
+waypoint = "waypoint.cli:app"
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/rota"]
+packages = ["src/waypoint"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

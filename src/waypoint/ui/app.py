@@ -1,4 +1,4 @@
-"""Rota — local web UI. Start with `rota ui` (or `streamlit run src/rota/ui/app.py`)."""
+"""Waypoint — local web UI. Start with `waypoint ui` (or `streamlit run src/waypoint/ui/app.py`)."""
 from __future__ import annotations
 
 import json
@@ -9,18 +9,18 @@ import pandas as pd
 import streamlit as st
 import yaml
 
-from rota.analysis.gap import STATUS_PT, market_fit
-from rota.collect import add_manual, collect
-from rota.db import DB
-from rota.extract import run_extraction
-from rota.llm import LLMNotConfigured, config_from_env, make_client
-from rota.models import REGION_PT, SENIORITY_PT
-from rota.pipeline import analyze, compute_gap, make_plan, make_report
-from rota.profile import build_profile, effective_levels, load_profile, save_overrides
-from rota.report import chart_top_skills, linkedin_post_draft, post_numbers
-from rota.settings import load_config
+from waypoint.analysis.gap import STATUS_PT, market_fit
+from waypoint.collect import add_manual, collect
+from waypoint.db import DB
+from waypoint.extract import run_extraction
+from waypoint.llm import LLMNotConfigured, config_from_env, make_client
+from waypoint.models import REGION_PT, SENIORITY_PT
+from waypoint.pipeline import analyze, compute_gap, make_plan, make_report
+from waypoint.profile import build_profile, effective_levels, load_profile, save_overrides
+from waypoint.report import chart_top_skills, linkedin_post_draft, post_numbers
+from waypoint.settings import load_config
 
-st.set_page_config(page_title="Rota", page_icon="🧭", layout="wide")
+st.set_page_config(page_title="Waypoint", page_icon="🧭", layout="wide")
 
 cfg = load_config()
 cfg.paths.ensure()
@@ -47,7 +47,7 @@ def current_extractor() -> str:
     return "llm" if n else "baseline"
 
 
-st.title("🧭 Rota")
+st.title("🧭 Waypoint")
 st.caption(f"{db.count_jobs()} vagas no banco local · {llm_status()} · extrator em uso: {current_extractor()}")
 
 tab_market, tab_gap, tab_plan, tab_jobs, tab_update, tab_post = st.tabs(
@@ -66,7 +66,7 @@ with tab_market:
         region = c2.selectbox("Região", ["(todas)"] + sorted(a.jobs_df["region"].unique()),
                               format_func=lambda r: REGION_PT.get(r, r))
         sens = c3.multiselect("Senioridade", list(SENIORITY_PT), format_func=SENIORITY_PT.get)
-        from rota.analysis import market
+        from waypoint.analysis import market
         j, s = market.filter_frames(a.jobs_df, a.skills_df, role=None if role == "(todos)" else role,
                                     region=None if region == "(todas)" else region, seniorities=sens or None)
         tbl = market.skill_table(j, s)

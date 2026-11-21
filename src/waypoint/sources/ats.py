@@ -13,7 +13,7 @@ from typing import Iterator
 from ..textutil import html_to_text
 from .base import Posting, Source, TitleFilter, ts_to_iso
 
-log = logging.getLogger("rota.sources")
+log = logging.getLogger("waypoint.sources")
 
 
 # --------------------------------------------------------------------------- Greenhouse

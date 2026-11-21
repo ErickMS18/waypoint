@@ -3,12 +3,12 @@ import json
 import httpx
 import pytest
 
-from rota.collect import collect
-from rota.extract import build_prompt, canonicalize, extract_baseline, extract_llm, run_extraction
-from rota.llm import LLMConfig, LLMError, LLMNotConfigured, config_from_env, make_client, parse_json_loose
-from rota.models import Job, JobExtraction, SkillMention
-from rota.roles import seniority_heuristic
-from rota.taxonomy import get_taxonomy
+from waypoint.collect import collect
+from waypoint.extract import build_prompt, canonicalize, extract_baseline, extract_llm, run_extraction
+from waypoint.llm import LLMConfig, LLMError, LLMNotConfigured, config_from_env, make_client, parse_json_loose
+from waypoint.models import Job, JobExtraction, SkillMention
+from waypoint.roles import seniority_heuristic
+from waypoint.taxonomy import get_taxonomy
 
 
 def _job(title, text, **kw):

@@ -8,11 +8,11 @@ from urllib.parse import urlparse
 
 import httpx
 
-log = logging.getLogger("rota.http")
+log = logging.getLogger("waypoint.http")
 
 
 class Http:
-    def __init__(self, user_agent: str = "rota/0.1", delay: float = 1.0, timeout: float = 30.0,
+    def __init__(self, user_agent: str = "waypoint/0.1", delay: float = 1.0, timeout: float = 30.0,
                  transport: httpx.BaseTransport | None = None, retries: int = 3):
         self.delay = delay
         self.retries = retries

@@ -1,4 +1,4 @@
-# {{ "Relatório de mercado" if public else "Relatório Rota" }} — {{ stamp }}
+# {{ "Relatório de mercado" if public else "Relatório Waypoint" }} — {{ stamp }}
 
 **{{ numbers.n_jobs }} vagas** de {{ numbers.n_companies }} empresas · fontes: {{ numbers.sources | join(", ") }} ·
 publicadas entre {{ date_min }} e {{ date_max }} · extração: `{{ extractor_model }}`
@@ -52,7 +52,7 @@ publicadas entre {{ date_min }} e {{ date_max }} · extração: `{{ extractor_mo
 {% if trends is not none and not trends.empty %}
 Comparação entre vagas publicadas nos últimos 45 dias (n={{ trends.n_recent_jobs.iloc[0] }}) e anteriores (n={{ trends.n_older_jobs.iloc[0] }}).
 
-> Atenção: as janelas misturam fontes diferentes (fontes de vagas remotas publicam mais vagas recentes que os quadros das empresas), então trate estas variações como indício, não como tendência comprovada. O histórico próprio do Rota melhora isso a cada coleta.
+> Atenção: as janelas misturam fontes diferentes (fontes de vagas remotas publicam mais vagas recentes que os quadros das empresas), então trate estas variações como indício, não como tendência comprovada. O histórico próprio do Waypoint melhora isso a cada coleta.
 
 | Skill | Recentes | Anteriores | Variação |
 |---|---:|---:|---:|
@@ -60,7 +60,7 @@ Comparação entre vagas publicadas nos últimos 45 dias (n={{ trends.n_recent_j
 | {{ row.name }} | {{ row.share_recent | pct }} | {{ row.share_older | pct }} | {{ "%+.0f" | format(row.delta_pp) }} p.p. |
 {% endfor %}
 {% else %}
-Ainda não há vagas suficientes com data para comparar períodos (mínimo de 10 em cada janela). Rode `rota collect` de novo em algumas semanas: o histórico fica no banco local.
+Ainda não há vagas suficientes com data para comparar períodos (mínimo de 10 em cada janela). Rode `waypoint collect` de novo em algumas semanas: o histórico fica no banco local.
 {% endif %}
 {% if not public and gap is not none %}
 
@@ -129,4 +129,4 @@ Ainda não há vagas suficientes com data para comparar períodos (mínimo de 10
 {% endif %}
 
 ---
-<sub>Gerado pelo Rota. Dados de vagas públicas (Greenhouse, Lever, Ashby{% if "himalayas" in numbers.sources %}, Himalayas — remote jobs data via https://himalayas.app{% endif %}). Os textos das vagas ficam só na máquina local.</sub>
+<sub>Gerado pelo Waypoint. Dados de vagas públicas (Greenhouse, Lever, Ashby{% if "himalayas" in numbers.sources %}, Himalayas — remote jobs data via https://himalayas.app{% endif %}). Os textos das vagas ficam só na máquina local.</sub>

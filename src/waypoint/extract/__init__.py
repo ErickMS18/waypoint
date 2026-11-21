@@ -11,7 +11,7 @@ from ..roles import seniority_heuristic
 from ..taxonomy import Taxonomy, get_taxonomy
 from ..textutil import fold, trim_for_llm
 
-log = logging.getLogger("rota.extract")
+log = logging.getLogger("waypoint.extract")
 
 PROMPT_VERSION = "job-v1"
 

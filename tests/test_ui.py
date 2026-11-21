@@ -2,10 +2,10 @@ from pathlib import Path
 
 import pytest
 
-from rota.collect import collect
-from rota.extract import run_extraction
+from waypoint.collect import collect
+from waypoint.extract import run_extraction
 
-APP = Path(__file__).resolve().parents[1] / "src" / "rota" / "ui" / "app.py"
+APP = Path(__file__).resolve().parents[1] / "src" / "waypoint" / "ui" / "app.py"
 
 
 def test_ui_renders_empty(project):

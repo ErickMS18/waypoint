@@ -110,7 +110,7 @@ def write_report(out_dir: Path, *, jobs_df: pd.DataFrame, tables: dict[str, pd.D
             files[f"chart_{rid}"] = chart_top_skills(
                 tbl, out_dir / f"top_skills_{rid}.png",
                 title=f"O que as vagas de {roles_cfg.get(rid, {}).get('label', rid)} pedem",
-                subtitle=f"% de {n} vagas reais que citam cada skill · coletadas em {stamp} · Rota")
+                subtitle=f"% de {n} vagas reais que citam cada skill · coletadas em {stamp} · Waypoint")
     dates = jobs_df["published_at"].dropna()
     ctx = {
         "stamp": stamp, "numbers": numbers,
@@ -122,7 +122,7 @@ def write_report(out_dir: Path, *, jobs_df: pd.DataFrame, tables: dict[str, pd.D
         "date_max": dates.max().strftime("%Y-%m-%d") if len(dates) else "?",
         "charts": {k: v.name for k, v in files.items()},
     }
-    name = "market_report.md" if public else "rota_report.md"
+    name = "market_report.md" if public else "waypoint_report.md"
     files["report"] = out_dir / name
     files["report"].write_text(render_report(ctx, public=public), encoding="utf-8")
     files["numbers"] = out_dir / "post_numbers.json"
