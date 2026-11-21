@@ -1,4 +1,4 @@
-<p align="center"><img src="assets/cover.png" alt="Waypoint — AI career radar" width="820"></p>
+<p align="center"><img src="assets/cover.png" alt="Waypoint — AI career radar and personal planner" width="820"></p>
 
 # Waypoint — an LLM-powered career radar and personal planner
 
@@ -37,8 +37,9 @@ Small samples (MLOps, Analytics Engineer) are flagged as unstable in the app; th
 
 | | |
 |---|---|
-| **Today** | One primary action: the block to do *now*, with Done / Did part of it / Next. Progress for the day, an undo, and "free time today" that re-plans instantly. |
-| **Week** | Seven columns with every block of the week: deadlines first and spread out, study reserved, exploration protected. Edit your free time per weekday and add exceptions. |
+| **Today** | One primary action: the block to do *now*, with Finish / Log part of it / Next. The rest of the day, risks with a one-click fix, an undo, and "free time today" that re-plans instantly. |
+| **Quick capture** | Press `Ctrl K` and type like you talk: *"AI exam on Thursday, about 6h of study"*. The LLM turns it into a project with area, deadline, hours, priority and ordered tasks; you review and save. Without a key, simple rules do the same for dates, weekdays and hours. |
+| **Week** | Seven columns with every block of the week: deadlines first and spread out, study reserved, exploration protected. Free time per weekday and one-off exceptions are set in **Profile → Routine**. |
 | **Projects** | College, internship, research and personal projects with deadlines and priorities. An LLM breaks a project into concrete tasks with hour estimates (template fallback without a key). |
 | **Market radar** | Most requested skills per role (required vs. nice-to-have), Brazil vs. international, seniority mix, rising skills over time. Click a bar to see the postings behind it. |
 | **Role comparison** | The same skills side by side across up to 3 roles, plus what is *typical* of each role. Useful to decide between, say, BI and Analytics Engineering. |
@@ -46,10 +47,11 @@ Small samples (MLOps, Analytics Engineer) are flagged as unstable in the app; th
 | **Study plan** | Splits your study hours by focus weights (career / exploration / personal interests). Exploration time is protected; nothing is ever called "irrelevant": conflicts become explicit trade-offs. Suggested portfolio projects can be sent to Projects in one click. |
 | **Job explorer** | Filter postings by role, region, seniority and skills; open one to see what it asks for and what you still don't cover. |
 | **Role catalog** | Each role comes with a plain-language description. Turn roles on/off or create a custom role from a job title. |
-| **One-click app** | A desktop shortcut opens the app without a terminal; the **Update market** button collects, extracts and re-plans in the background. Dark/light theme and Portuguese/English, remembered between sessions. |
+| **One-click app** | A desktop shortcut opens Waypoint in its own window (no terminal, no browser tabs); the **Market** button in the header collects, extracts and re-plans in the background. Dark/light theme and Portuguese/English, remembered between sessions. |
 
 <p align="center"><img src="assets/screenshots/week.png" alt="Week view: deadlines spread before the due date, study reserved" width="900"></p>
 <p align="center"><img src="assets/screenshots/compare.png" alt="Compare roles: AI/ML Engineer vs Data Scientist vs BI" width="900"></p>
+<p align="center"><img src="assets/screenshots/capture.png" alt="Quick capture: a sentence becomes a project with deadline, hours and ordered tasks" width="900"></p>
 
 ## v2: how the orchestrator plans
 
@@ -65,6 +67,14 @@ The scheduler is a small, deterministic and fully tested function (`src/waypoint
 
 Your projects, log and settings live in `data/orchestrator.json` (git-ignored). `waypoint today` prints the plan in the terminal.
 
+## Design
+
+The interface went through a design round before any code: three directions, then color studies on the one I picked.
+The result is a "field notebook" identity: bottle green and mustard with a pink accent, an editorial serif
+(Instrument Serif) for headlines and numbers, a clean grotesque (Hanken Grotesk) for text, and small geometric glyphs
+for each area instead of emoji. One element per screen is loud (the mustard "Now" block on Today); everything around it stays quiet.
+Fonts are bundled with the app (OFL), so it looks the same offline.
+
 ## UX: principles applied
 
 I treated the interface as part of the product, not decoration. What was applied, and where:
@@ -72,15 +82,16 @@ I treated the interface as part of the product, not decoration. What was applied
 | Principle | In the app |
 |---|---|
 | One primary action per screen (Hick's law) | Today opens on a single "Now" card with one primary button; everything else is secondary. |
-| Navigation by user goal | Sidebar grouped into *Plan*, *Market* and *You*, with a clear active state. |
+| Navigation by user goal | One top bar ordered by how often you need it: Today, Week, Projects, Study, then Market, Jobs, Profile. |
+| Low-friction input | Quick capture in plain language (`Ctrl K`), keyboard shortcuts (`C` finish, `N` next, `?` help), steppers instead of free numbers. |
 | Visibility of system status (Nielsen #1) | Live progress for background updates, toasts after every action, last-update stamp, day progress bar. |
 | User control and freedom (#3) | Undo for the last log entry, "Next" instead of forcing an order, two-step delete. |
 | Error prevention (#5) | Focus weights are normalized to 100 instead of blocking the save; dates can't be in the past; deleting asks for confirmation. |
-| Recognition over recall (#6) | Every area and role has icon + label + color; role descriptions and help text on non-obvious controls. |
-| Progressive disclosure | Task lists, edit forms and full tables live in expanders and popovers. |
+| Recognition over recall (#6) | Every area has its own glyph + label + color; role descriptions and help text on non-obvious controls. |
+| Progressive disclosure | Task lists, edit forms and long tables open on demand. |
 | Empty states that teach | Each empty screen says why it is empty and offers the next step as a button. |
 | Honest data | Small samples are flagged (fewer than 10 postings per role); trends need enough dated postings. |
-| Accessibility | Chart palettes validated per theme (contrast, color-vision deficiency separation), never color alone, visible keyboard focus. |
+| Accessibility | Chart palettes validated per theme (contrast, color-vision deficiency separation), never color alone, visible keyboard focus, skip link, native dialog, reduced motion respected. |
 | Personalization | Dark (default) and light themes; Portuguese and English. Both are remembered. |
 
 ## How it works
@@ -103,11 +114,12 @@ flowchart LR
     CV[Resume] --> R[Redact PII] --> P["Skill levels 0–3<br/>+ manual overrides"]
     M & P --> G["Gap = demand × (1 − coverage)"]
     G --> PL["Study plan<br/>focus weights · protected exploration · trade-offs"]
+    QC["Quick capture in plain language<br/>(LLM → project draft)"] --> PR
     PR["Projects & deadlines<br/>(LLM task breakdown)"] --> O
     AV[Free time per day] --> O
     PL --> O["v2 orchestrator<br/>EDF + spreading · reserved study · risks · re-planning"]
-    O --> UI["Streamlit app: Today · Week · Projects · Market"]
-    M & G --> UI
+    O --> API["Local FastAPI (JSON)"] --> UI["App window: Today · Week · Projects · Study · Market · Jobs · Profile"]
+    M & G --> API
 ```
 
 ### Engineering decisions (the parts I'd talk about in an interview)
@@ -119,6 +131,7 @@ flowchart LR
 | **A dictionary baseline next to the LLM** | Gives the evaluation a reference point and keeps the tool useful with no API key. It turned out to be a strong baseline (see below). |
 | **Provider-agnostic LLM client over plain HTTP** | Gemini, Anthropic, OpenAI or any OpenAI-compatible endpoint (Ollama for fully local). One `.env` line to switch. Throttling and 429/503 backoff built in. |
 | **Content-hash cache for every LLM call** | Re-runs are free; only new or changed postings are sent. A full weekly refresh costs a few dozen calls. |
+| **Local JSON API + a no-build web app** | A small FastAPI server (bound to 127.0.0.1) serves plain HTML/CSS/ES modules: no framework, no bundler, nothing to compile. The UI is fully custom and fast, and every screen is covered by API tests. |
 | **Background updater + status file** | The UI never blocks: the update runs in a window-less process and reports progress in a JSON file the page polls. Closing the browser doesn't kill it; a dead process is detected instead of showing "running" forever. |
 | **Roles as data, not code** | A YAML catalog (title regexes, search terms, descriptions). Turning a role off hides it without deleting data; postings are re-labeled when the catalog changes. |
 | **Small-sample guardrails** | Per-role percentages are flagged when a role has fewer than 10 postings, and trends need ≥ 10 recent and ≥ 10 older postings. |
@@ -174,8 +187,9 @@ The repository contains only labels and posting ids/URLs (`eval/gold.jsonl`), ne
    the evaluation and the tests, and creates a **Waypoint** shortcut on the Desktop and in the Start menu.
 
 From then on, just open the **Waypoint** shortcut: it starts the app in the background (no terminal window),
-opens the browser and, if the market data is more than a day old, refreshes it automatically. The **Update market**
-button refreshes on demand; **Quit Waypoint** (under Options) shuts it down.
+opens it in its own window (Edge or Chrome in app mode; the default browser otherwise) and, if the market data is more
+than a day old, refreshes it automatically. The **Market** button in the header refreshes on demand;
+**Quit Waypoint** (Profile → Preferences) shuts it down.
 
 ### Any OS, command line
 
@@ -238,13 +252,14 @@ src/waypoint/
   analysis/       market stats, gap, focus-weighted plan
   report/         Markdown report, charts, post numbers
   eval/           sampling, metrics, bootstrap CI, README update
-  orchestrator.py v2 scheduler: projects, availability, deadlines, study blocks, re-planning
-  ui/app.py       Streamlit app (10 pages), ui/theme.py design tokens, ui/i18n.py PT/EN strings
+  orchestrator.py v2 scheduler: projects, availability, deadlines, study blocks, re-planning, quick capture
+  web/server.py   local JSON API (FastAPI) for the app
+  web/static/     the app: index.html, app.css (design tokens), app.js, i18n.js (PT/EN), bundled fonts
   updater.py      background "update everything" + status file
   launcher.py     one-click start (no terminal), used by the desktop shortcut
   resources/      skill taxonomy, role catalog, project templates, report template
 scripts/          Windows runner, shortcut target, cover generator
-tests/            69 offline tests with a fake network (pytest; CI on Ubuntu + Windows)
+tests/            66 offline tests with a fake network (pytest; CI on Ubuntu + Windows)
 ```
 
 ## Limitations

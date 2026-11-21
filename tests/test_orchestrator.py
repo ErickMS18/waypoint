@@ -96,3 +96,22 @@ def test_day_override_and_state_roundtrip(tmp_path):
 def test_breakdown_without_llm_uses_template():
     tasks = o.breakdown_tasks("TCC", "faculdade", None, "", 20, client=None, lang="en")
     assert len(tasks) == 4 and abs(sum(t.hours for t in tasks) - 20) <= 2
+
+
+def test_capture_respects_hours_the_user_stated():
+    from datetime import date
+
+    from waypoint import orchestrator as o
+
+    class Fake:
+        def complete_model(self, system, user, model, cache_tag=None):
+            return model(name="Trabalho de ES", area="faculdade", deadline="2026-11-27", hours=10, priority=1,
+                         tasks=[{"title": "Requisitos", "hours": 2}, {"title": "UML", "hours": 3},
+                                {"title": "Documentação", "hours": 3}, {"title": "Revisão", "hours": 2}])
+
+    d = o.capture("Trabalho de ES para sexta, umas 5 horas", date(2026, 11, 21), client=Fake())
+    assert d["method"] == "llm" and d["hours"] == 5 and sum(t["hours"] for t in d["tasks"]) == 5
+    assert all(t["hours"] >= 0.5 for t in d["tasks"]) and [t["title"] for t in d["tasks"]][0] == "Requisitos"
+    # without a number in the text, the model's estimate stands
+    d = o.capture("Trabalho de ES para sexta", date(2026, 11, 21), client=Fake())
+    assert d["hours"] == 10

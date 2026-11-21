@@ -1,7 +1,8 @@
-"""One-click launcher: starts the interface in the background (no terminal) and opens the browser.
+"""One-click launcher: starts the local app in the background (no terminal) and opens it in its own window.
 
 Used by the desktop shortcut (scripts/waypoint_launcher.pyw) and by `waypoint ui`.
-If the interface is already running it just opens the browser. If the last update is older
+The window is Edge (or Chrome) in "app" mode: no tabs or address bar, its own taskbar entry. Without
+either, it falls back to the default browser. If the app is already running it just opens the window. If the last update is older
 than `auto_update_hours` (and auto-update is on), it also starts an update in the background;
 the home page shows its progress live.
 """
@@ -95,13 +96,41 @@ def start_server(root: Path) -> subprocess.Popen:
     from .updater import _no_window_flags, python_exe
     logs = root / "data" / "logs"
     logs.mkdir(parents=True, exist_ok=True)
-    app_file = Path(__file__).parent / "ui" / "app.py"
     env = {**os.environ, "WAYPOINT_HOME": str(root), "PYTHONIOENCODING": "utf-8"}
-    cmd = [python_exe(), "-m", "streamlit", "run", str(app_file), "--server.headless", "true",
-           "--server.port", str(PORT), "--server.address", "localhost", "--browser.gatherUsageStats", "false",
-           "--theme.base", "light", "--theme.primaryColor", "#2a78d6", "--client.toolbarMode", "minimal"]
+    cmd = [python_exe(), "-m", "waypoint.web.server"]
     return subprocess.Popen(cmd, cwd=str(root), env=env, stdout=open(logs / "ui.log", "w", encoding="utf-8"),
                             stderr=subprocess.STDOUT, stdin=subprocess.DEVNULL, creationflags=_no_window_flags())
+
+
+def app_browser() -> str | None:
+    """Edge or Chrome executable, for an app-style window (Windows paths first, then PATH)."""
+    import shutil
+    cands = []
+    for base in (os.environ.get("PROGRAMFILES(X86)"), os.environ.get("PROGRAMFILES"), os.environ.get("LOCALAPPDATA")):
+        if base:
+            cands += [Path(base) / "Microsoft/Edge/Application/msedge.exe", Path(base) / "Google/Chrome/Application/chrome.exe"]
+    for c in cands:
+        if c.exists():
+            return str(c)
+    for name in ("msedge", "microsoft-edge", "google-chrome", "chromium", "chrome"):
+        found = shutil.which(name)
+        if found:
+            return found
+    return None
+
+
+def open_window(root: Path) -> None:
+    exe = app_browser()
+    if not exe:
+        webbrowser.open(URL)
+        return
+    profile = root / "data" / "app-window"  # a separate profile: its own window and taskbar icon
+    profile.mkdir(parents=True, exist_ok=True)
+    from .updater import _no_window_flags
+    subprocess.Popen([exe, f"--app={URL}", f"--user-data-dir={profile}", "--window-size=1440,920",
+                      "--no-first-run", "--no-default-browser-check", "--disable-features=Translate"],
+                     stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
+                     creationflags=_no_window_flags(), close_fds=True)
 
 
 def _alert(msg: str) -> None:
@@ -139,7 +168,7 @@ def main(open_browser: bool = True, auto_update: bool = True) -> int:
             _alert("Não consegui abrir a interface do Waypoint.\nVeja o arquivo data\\logs\\ui.log.")
             return 1
     if open_browser:
-        webbrowser.open(URL)
+        open_window(cfg.paths.root)
     return 0
 
 

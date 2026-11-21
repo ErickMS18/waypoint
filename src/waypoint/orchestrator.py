@@ -472,3 +472,119 @@ def state_path(data_dir: Path) -> Path:
 
 def now_local() -> datetime:
     return datetime.now()
+
+
+# ============================================================================= AI helper: quick capture in plain words
+class _LLMCapture(BaseModel):
+    name: str
+    area: str = "pessoal"
+    deadline: Optional[str] = None      # YYYY-MM-DD
+    hours: float = Field(default=0, ge=0, le=400)
+    priority: int = Field(default=2, ge=1, le=3)
+    tasks: list[_LLMTask] = Field(default_factory=list)
+
+
+CAPTURE_SYSTEM = ("You turn a short note from a university student who also works into one structured project for "
+                  "a personal planner. Resolve relative dates against the given 'today'. JSON only.")
+CAPTURE_USER = """Today is {today} ({weekday}).
+Note: \"\"\"{text}\"\"\"
+
+Return one project:
+- name: short, specific, in {language} (e.g. "Prova de IA", "Relatório do PIBIC").
+- area: one of faculdade (college: exams, assignments, classes), estagio (internship/work), pesquisa (research,
+  papers), carreira (career, portfolio, job applications), pessoal (anything else).
+- deadline: YYYY-MM-DD if the note implies one (e.g. "quinta" = the next Thursday after today), else null.
+- hours: total effort if stated or reasonably implied, else your honest estimate.
+- priority: 1 high (exam/deadline within 7 days or the note says urgent), 2 normal, 3 low.
+- tasks: 2 to 6 concrete steps in order, in {language}, each with an hour estimate (0.5 to 40) summing close to hours.
+JSON: {{"name": "", "area": "", "deadline": null, "hours": 0, "priority": 2, "tasks": [{{"title": "", "hours": 0}}]}}"""
+
+_WEEKDAYS_PT = ["segunda", "terça", "quarta", "quinta", "sexta", "sábado", "domingo"]
+_WEEKDAYS_EN = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
+_AREA_HINTS = {
+    "faculdade": ["prova", "trabalho", "tde", "aula", "disciplina", "faculdade", "exam", "assignment", "class", "somativa", "apresentação"],
+    "estagio": ["estágio", "estagio", "dashboard", "chamado", "bi ", "power bi", "reunião", "internship", "work"],
+    "pesquisa": ["artigo", "pesquisa", "pibic", "paper", "research", "experimento"],
+    "carreira": ["portfólio", "portfolio", "linkedin", "currículo", "entrevista", "candidatura", "interview"],
+}
+
+
+def capture_fallback(text: str, today: date, lang: str = "pt") -> dict[str, Any]:
+    """Rule-based parse used without an AI key: dates (dd/mm, weekday names), hours ("6h") and area keywords."""
+    import re
+    low = " " + text.lower() + " "
+    deadline = None
+    m = re.search(r"\b(\d{1,2})/(\d{1,2})(?:/(\d{2,4}))?\b", low)
+    if m:
+        y = int(m.group(3)) if m.group(3) else today.year
+        y = y + 2000 if y < 100 else y
+        try:
+            d = date(y, int(m.group(2)), int(m.group(1)))
+            if d < today and not m.group(3):
+                d = date(y + 1, d.month, d.day)
+            deadline = d
+        except ValueError:
+            deadline = None
+    if deadline is None:
+        for names in (_WEEKDAYS_PT, _WEEKDAYS_EN):
+            for i, n in enumerate(names):
+                if re.search(rf"\b{n}(-feira)?\b", low):
+                    ahead = (i - today.weekday()) % 7 or 7
+                    deadline = today + timedelta(days=ahead)
+                    break
+            if deadline:
+                break
+    if deadline is None and re.search(r"\bamanh[ãa]\b|\btomorrow\b", low):
+        deadline = today + timedelta(days=1)
+    hours = _stated_hours(text) or 6.0
+    area = next((a for a, keys in _AREA_HINTS.items() if any(k in low for k in keys)), "pessoal")
+    name = re.sub(r"\s+", " ", re.split(r"[,;\n]", text.strip())[0])[:60].strip(" .,;")
+    name = name[:1].upper() + name[1:]
+    prio = 1 if deadline and (deadline - today).days <= 7 else 2
+    tasks = [Task(id=new_id(), title=t, hours=max(STEP, round_step(hours * f) or STEP)) for t, f in TEMPLATE_TASKS[lang]]
+    return {"name": name or "Novo projeto", "area": area, "deadline": deadline.isoformat() if deadline else None,
+            "hours": hours, "priority": prio, "tasks": [asdict(t) for t in tasks], "method": "rules"}
+
+
+def _stated_hours(text: str) -> float | None:
+    """Hours the user wrote explicitly ("uns 6h", "5 horas", "3.5 hours"), if any."""
+    import re
+    m = re.search(r"(\d+(?:[.,]\d+)?)\s*(h|hrs?|horas?|hours?)\b", text.lower())
+    return float(m.group(1).replace(",", ".")) if m else None
+
+
+def _fit_hours(tasks: list[Task], total: float) -> list[Task]:
+    """Scale task estimates so they add up to the total the user stated (their number wins over the model's)."""
+    cur = sum(t.hours for t in tasks)
+    if not tasks or cur <= 0 or abs(cur - total) < STEP:
+        return tasks
+    for t in tasks:
+        t.hours = max(STEP, round_step(t.hours * total / cur) or STEP)
+    diff = round_step(total - sum(t.hours for t in tasks))
+    if diff:  # absorb rounding in the largest task
+        big = max(tasks, key=lambda t: t.hours)
+        big.hours = max(STEP, big.hours + diff)
+    return tasks
+
+
+def capture(text: str, today: date, client=None, lang: str = "pt") -> dict[str, Any]:
+    """Turn a plain-language note ("prova de IA quinta, uns 6h de estudo") into a project draft (not saved)."""
+    if client is not None:
+        try:
+            res = client.complete_model(CAPTURE_SYSTEM, CAPTURE_USER.format(
+                today=today.isoformat(), weekday=_WEEKDAYS_EN[today.weekday()], text=text.strip()[:1500],
+                language="Portuguese (Brazil)" if lang == "pt" else "English"), _LLMCapture, cache_tag="capture-v1")
+            area = res.area if res.area in AREAS else "pessoal"
+            dl = _d(res.deadline)
+            tasks = [Task(id=new_id(), title=t.title.strip(), hours=max(STEP, round_step(t.hours) or STEP))
+                     for t in res.tasks[:8] if t.title.strip()]
+            stated = _stated_hours(text)
+            if stated:
+                tasks = _fit_hours(tasks, stated)
+            total = sum(t.hours for t in tasks) if tasks else float(stated or res.hours)
+            return {"name": res.name.strip()[:80] or text[:60], "area": area,
+                    "deadline": dl.isoformat() if dl and dl >= today else None, "hours": total,
+                    "priority": int(res.priority), "tasks": [asdict(t) for t in tasks], "method": "llm"}
+        except Exception:
+            pass
+    return capture_fallback(text, today, lang)
