@@ -59,9 +59,6 @@ $noLlm = @(); if (-not $hasKey) { $noLlm = @("--no-llm") }
 
 # ---------- pipeline ----------
 Run "Empresas configuradas" $wp @("boards", "check")
-Run "Coleta de vagas" $wp @("collect")
-if ($hasKey) { Run "Extracao (LLM)" $wp @("extract") }
-Run "Extracao (baseline por dicionario)" $wp @("extract", "--extractor", "baseline")
 
 $needProfile = -not (Test-Path "profile\profile.json")
 if (-not $needProfile -and $hasKey) {
@@ -71,19 +68,39 @@ if (-not $needProfile -and $hasKey) {
 if ($needProfile) {
     $cv = Get-ChildItem -Path "profile" -Include *.pdf, *.docx -File -Recurse | Select-Object -First 1
     if ($cv) { Run "Perfil a partir do curriculo" $wp (@("profile", $cv.FullName) + $noLlm) }
-    else { Say "Sem curriculo em profile\ (coloque um .pdf ou .docx la)." }
+    else { Say "Sem curriculo em profile\ (coloque um .pdf ou .docx la, ou envie pela interface)." }
 }
+
+# coleta -> extracao (LLM + dicionario) -> plano -> relatorios (o mesmo que o botao 'Atualizar tudo')
+Run "Atualizacao completa" $wp @("update")
 
 if (-not (Test-Path "data\eval\texts.jsonl")) { Run "Amostra para avaliacao" $wp @("eval", "sample", "--n", "40") }
 if (Test-Path "eval\gold.jsonl") {
     $evalArgs = @("eval", "run", "--update-readme"); if (-not $hasKey) { $evalArgs += @("--extractor", "baseline") }
     Run "Avaliacao" $wp $evalArgs
 }
-
-Run "Relatorio privado" $wp (@("report") + $noLlm)
-Run "Relatorio publico" $wp @("report", "--public")
 Run "Testes automaticos" $vpy @("-m", "pytest", "-q")
 
+# ---------- atalho (Area de Trabalho + Menu Iniciar) ----------
+Say "`n=== Atalho do Waypoint ==="
+try {
+    $root = (Get-Location).Path
+    $pyw = Join-Path $root ".venv\Scripts\pythonw.exe"
+    $shell = New-Object -ComObject WScript.Shell
+    $places = @([Environment]::GetFolderPath("Desktop"), (Join-Path ([Environment]::GetFolderPath("Programs")) ""))
+    foreach ($dir in $places) {
+        $lnk = $shell.CreateShortcut((Join-Path $dir "Waypoint.lnk"))
+        $lnk.TargetPath = $pyw
+        $lnk.Arguments = '"' + (Join-Path $root "scripts\waypoint_launcher.pyw") + '"'
+        $lnk.WorkingDirectory = $root
+        $lnk.IconLocation = (Join-Path $root "assets\waypoint.ico") + ",0"
+        $lnk.Description = "Waypoint - radar de carreira (abre a interface)"
+        $lnk.Save()
+        Say "Atalho criado: $(Join-Path $dir 'Waypoint.lnk')"
+    }
+} catch { Say "Nao consegui criar o atalho: $_" }
+
 Set-Content "data\logs\FIM.txt" "OK $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')" -Encoding UTF8
-Say "`nPronto! Relatorios em reports\. Para abrir a interface: ABRIR_INTERFACE.bat"
+Say "`nPronto! Relatorios em reports\. Para abrir a interface: atalho Waypoint na Area de Trabalho."
+Start-Process $pyw -ArgumentList ('"' + (Join-Path $root "scripts\waypoint_launcher.pyw") + '"') -WorkingDirectory $root
 Read-Host "Pressione Enter para fechar"

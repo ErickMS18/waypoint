@@ -219,7 +219,7 @@ def build_plan(gap: pd.DataFrame, focus: dict[str, Any], *, roles: list[str],
             w2 = total_effort / (career_h + 1)
             tradeoffs.append(
                 f"Mover 1h/semana de interesses para carreira anteciparia isso em ~{max(1, round(weeks_now - w2))} "
-                "semana(s), em troca de menos tempo para seus interesses. Quer mudar os pesos? (focus.yaml)"
+                "semana(s), em troca de menos tempo para seus interesses. Quer mudar os pesos? (interface: Plano → Focos e pesos)"
             )
         if exp_cfg.get("protected", True) and hours.get("exploracao"):
             tradeoffs.append(f"As {hours['exploracao']:g}h de exploração estão protegidas e não são realocadas automaticamente.")

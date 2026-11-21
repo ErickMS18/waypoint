@@ -87,8 +87,21 @@ class Config:
     focus: dict[str, Any]
 
     @property
+    def all_roles(self) -> dict[str, dict[str, Any]]:
+        """Every known role: catalog + custom (or a legacy explicit `roles:` block)."""
+        if self.targets.get("roles"):
+            return dict(self.targets["roles"])
+        out = dict(roles_catalog())
+        out.update(self.targets.get("custom_roles") or {})
+        return out
+
+    @property
     def roles(self) -> dict[str, dict[str, Any]]:
-        return self.targets.get("roles", {})
+        """Enabled roles, in catalog order (custom roles last)."""
+        if self.targets.get("roles"):
+            return dict(self.targets["roles"])
+        enabled = list(self.targets.get("roles_enabled") or [])
+        return {rid: r for rid, r in self.all_roles.items() if rid in enabled}
 
     @property
     def seniority_focus(self) -> list[str]:
@@ -127,6 +140,45 @@ def validate_focus(focus: dict[str, Any]) -> None:
     total = sum(float(v) for v in w.values())
     if w and abs(total - 100) > 0.01:
         raise ValueError(f"focus.yaml: weights must sum to 100 (got {total:g}).")
+
+
+@lru_cache(maxsize=1)
+def roles_catalog() -> dict[str, dict[str, Any]]:
+    return dict(load_yaml(RESOURCES / "roles_catalog.yaml").get("roles", {}))
+
+
+def save_local(config_dir: Path, name: str, updates: dict[str, Any]) -> Path:
+    """Merge `updates` into config/<name>.local.yaml (git-ignored) and write it back."""
+    path = config_dir / f"{name}.local.yaml"
+    current = load_yaml(path) if path.exists() else {}
+    for k, v in updates.items():
+        current[k] = v
+    header = "# Configuração só desta máquina (fora do Git). Editada pela interface do Waypoint.\n"
+    path.write_text(header + yaml.safe_dump(current, allow_unicode=True, sort_keys=False), encoding="utf-8")
+    return path
+
+
+def make_custom_role(name: str) -> tuple[str, dict[str, Any]]:
+    """Build a role definition from a free-text title (e.g. 'Prompt Engineer')."""
+    import re
+    import unicodedata
+    folded = unicodedata.normalize("NFKD", name.lower()).encode("ascii", "ignore").decode()
+    words = re.findall(r"[a-z0-9+#]+", folded)
+    if not words:
+        raise ValueError("Nome de cargo vazio.")
+    rid = "custom_" + "_".join(words)[:40]
+    pattern = r"\b" + r".{0,15}".join(re.escape(w) for w in words)
+    return rid, {
+        "label": name.strip(),
+        "summary": "Cargo personalizado criado por você.",
+        "description": "Cargo personalizado: o Waypoint procura vagas cujo título contém estas palavras, nesta ordem.",
+        "day_to_day": [],
+        "typical_skills": [],
+        "search_terms": [name.strip().lower()],
+        "title_include": [pattern],
+        "title_exclude": [r"\b(director|diretor[a]?|vp|head of)\b"],
+        "custom": True,
+    }
 
 
 @lru_cache(maxsize=1)

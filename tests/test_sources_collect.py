@@ -83,3 +83,32 @@ def test_gupy_fetches_full_description_when_summary_is_short():
     roles = {"data_scientist": {"search_terms": ["cientista de dados"]}}
     posts = list(g.fetch(roles, keep=lambda t: True))
     assert len(posts) == 1 and "Python e SQL" in posts[0].text and len(posts[0].text) > 200
+
+
+def test_catalog_roles_and_custom_role(cfg, db, monkeypatch):
+    from waypoint.models import Job
+    from waypoint.roles import RoleMatcher
+    from waypoint.settings import load_config, make_custom_role, save_local
+    m = RoleMatcher(cfg.roles)
+    assert m.match("Analista de BI Pleno") == "bi_analyst"
+    assert m.match("MLOps Engineer") == "mlops_engineer"
+    assert m.match("Analytics Engineer") == "analytics_engineer"
+    assert m.match("Senior Machine Learning Engineer") == "ai_ml_engineer"
+    assert m.match("Engenheiro de Dados") is None  # in the catalog, but not enabled by default
+    for r in cfg.all_roles.values():
+        assert r.get("label") and r.get("description") and r.get("search_terms")
+    rid, role = make_custom_role("Prompt Engineer")
+    save_local(cfg.paths.config, "targets", {"custom_roles": {rid: role}, "roles_enabled": [*cfg.roles, rid]})
+    c2 = load_config(cfg.paths.root)
+    assert rid in c2.roles and RoleMatcher(c2.roles).match("Senior Prompt Engineer") == rid
+
+
+def test_disabling_a_role_keeps_its_postings(cfg, db):
+    from waypoint.collect import prune_unmatched
+    from waypoint.models import Job
+    from waypoint.roles import RoleMatcher
+    job = Job(job_key="g:x:9", source="greenhouse", external_id="9", company="Acme", title="Data Engineer",
+              text="Build pipelines with Airflow and Spark. " * 20, role="data_engineer")
+    db.upsert_job(job)
+    assert prune_unmatched(db, RoleMatcher(cfg.all_roles)) == 0  # data_engineer is a known (disabled) role
+    assert db.job("g:x:9") is not None

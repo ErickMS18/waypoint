@@ -116,6 +116,8 @@ skills:
   # ---- MLOps ----
   - {id: mlops, name: MLOps, cat: mlops, aliases: [mlops, ml ops, ml platform, plataforma de ml, model deployment, deploy de modelos, deployment de modelos, models in production, modelos em produção], effort: 40}
   - {id: mlflow, name: MLflow / experiment tracking, cat: mlops, aliases: [mlflow, weights & biases, weights and biases, wandb, experiment tracking, kubeflow], effort: 10}
+  - {id: model_serving, name: Model serving, cat: mlops, aliases: [model serving, bentoml, seldon, kserve, torchserve, ray serve, serving de modelos], effort: 20}
+  - {id: etl_tools, name: ETL tools (Data Factory, Pentaho, Talend...), cat: data, aliases: [azure data factory, data factory, pentaho, talend, informatica, fivetran, airbyte], effort: 15}
   - {id: model_monitoring, name: Model monitoring, cat: mlops, aliases: [model monitoring, monitoramento de modelos, data drift, model drift], canon: [drift], effort: 15}
   - {id: docker, name: Docker, cat: mlops, aliases: [docker, containerization, containerização], canon: [containers, contêineres], effort: 15}
   - {id: kubernetes, name: Kubernetes, cat: mlops, aliases: [kubernetes, k8s, eks, gke, aks], effort: 30}
@@ -135,6 +137,9 @@ skills:
   - {id: power_bi, name: Power BI / DAX, cat: bi, aliases: [power bi, powerbi, dax], effort: 20}
   - {id: tableau_looker, name: Tableau / Looker, cat: bi, aliases: [tableau, looker, looker studio, metabase, qlik], effort: 15}
   - {id: data_visualization, name: Data visualization, cat: bi, aliases: [data visualization, visualização de dados, dashboards, dashboard, matplotlib, seaborn, plotly, streamlit], effort: 15}
+  - {id: ms_bi_stack, name: SSIS / SSAS / SSRS, cat: bi, aliases: [ssis, ssas, ssrs, sql server integration services, sql server analysis services, sql server reporting services], effort: 20}
+  - {id: fabric, name: Microsoft Fabric / Synapse, cat: bi, aliases: [microsoft fabric, azure synapse, synapse analytics, power bi premium], effort: 15}
+  - {id: kpi_metrics, name: KPI & metrics definition, cat: bi, aliases: [kpis, kpi, key performance indicators, indicadores de desempenho, definição de métricas, metric definitions, semantic layer, camada semântica], effort: 10}
   - {id: excel, name: Excel, cat: bi, aliases: [excel, google sheets, planilhas], effort: 10}
 
   # ---- spoken ----

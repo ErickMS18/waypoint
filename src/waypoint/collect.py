@@ -26,6 +26,7 @@ class CollectStats:
     skipped_empty: int = 0
     pruned: int = 0
     near_duplicates_removed: int = 0
+    reassigned: int = 0
     errors: list[str] = field(default_factory=list)
 
 
@@ -82,13 +83,31 @@ def collect(cfg: Config, db: DB, only: list[str] | None = None, transport=None,
                 stats.errors.append(f"{src.name}: {e}")
     finally:
         http.close()
-    stats.pruned = prune_unmatched(db, matcher)
+    stats.pruned = prune_unmatched(db, RoleMatcher(cfg.all_roles))
+    stats.reassigned = reassign_roles(cfg, db)
     stats.near_duplicates_removed = db.remove_near_duplicates()
     return stats
 
 
+def reassign_roles(cfg: Config, db: DB) -> int:
+    """Re-label stored postings after the role list changes (e.g. 'MLOps Engineer' used to fall
+    under AI/ML and now has its own role). Enabled roles win; otherwise the catalog order decides."""
+    enabled, every = RoleMatcher(cfg.roles), RoleMatcher(cfg.all_roles)
+    n = 0
+    for job in db.jobs():
+        if job.source == "manual":
+            continue
+        new = enabled.match(job.title) or every.match(job.title)
+        if new and new != job.role:
+            db.conn.execute("UPDATE jobs SET role=? WHERE job_key=?", (new, job.job_key))
+            n += 1
+    db.conn.commit()
+    return n
+
+
 def prune_unmatched(db: DB, matcher: RoleMatcher) -> int:
-    """Drop collected postings whose title no longer matches any target role (after editing targets.yaml).
+    """Drop collected postings whose title matches no known role at all (catalog + custom).
+    Turning a role off does NOT delete its postings: they are only hidden from the analysis.
     Postings you pasted yourself are always kept."""
     drop = [j.job_key for j in db.jobs() if j.source != "manual" and matcher.match(j.title) is None]
     return db.delete_jobs(drop)

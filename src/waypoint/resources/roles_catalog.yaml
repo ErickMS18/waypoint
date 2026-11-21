@@ -1,0 +1,149 @@
+# Catalog of target roles. Order matters: a job title is assigned to the FIRST role
+# whose title_include matches (so specific roles like MLOps come before generic ones).
+# Titles are matched after lowercasing and removing accents.
+roles:
+  mlops_engineer:
+    label: "MLOps Engineer"
+    summary: "Coloca modelos de machine learning em produção e mantém eles funcionando."
+    description: >-
+      Cuida da "esteira" dos modelos: empacota, faz deploy, automatiza treino e versões,
+      monitora desempenho e drift em produção e garante que tudo seja reproduzível e escalável.
+      Fica entre ciência de dados e engenharia de software/infraestrutura.
+    day_to_day:
+      - Montar pipelines de treino e deploy (CI/CD para modelos)
+      - Servir modelos via API e containers (Docker, Kubernetes)
+      - Monitorar modelos em produção (latência, drift, qualidade)
+      - Versionar dados, modelos e experimentos (MLflow etc.)
+    typical_skills: [Python, Docker, Kubernetes, CI/CD, MLflow, AWS/GCP/Azure, monitoramento]
+    search_terms: [mlops engineer, machine learning platform engineer, engenheiro de mlops, mlops]
+    title_include:
+      - '\bml ?ops\b'
+      - '\b(ml|machine learning|ai)\b.{0,10}\b(platform|infrastructure|infra|ops)\b.{0,15}\b(engineer|engenheir[oa])\b'
+    title_exclude:
+      - '\b(director|diretor[a]?|vp|vice president|head of|manager|gerente)\b'
+
+  analytics_engineer:
+    label: "Analytics Engineer"
+    summary: "Transforma dados brutos em modelos limpos e confiáveis para análise."
+    description: >-
+      Faz a ponte entre engenharia de dados e análise: modela tabelas (camadas, fatos e dimensões),
+      escreve transformações em SQL/dbt, documenta métricas e testa a qualidade dos dados para que
+      analistas e BIs usem uma única fonte da verdade.
+    day_to_day:
+      - Modelar dados em camadas (staging, intermediária, marts)
+      - Escrever e testar transformações em SQL/dbt
+      - Definir e documentar métricas de negócio
+      - Garantir qualidade e governança dos dados
+    typical_skills: [SQL, dbt, modelagem de dados, data warehouse, Git, qualidade de dados, BI]
+    search_terms: [analytics engineer, engenheiro de analytics, analytics engineering]
+    title_include:
+      - '\banalytics engineer'
+      - '\bengenheir[oa] de analytics\b'
+    title_exclude:
+      - '\b(director|diretor[a]?|vp|vice president|head of|manager|gerente)\b'
+
+  bi_analyst:
+    label: "BI Developer / BI Analyst"
+    summary: "Constrói dashboards e modelos de BI que ajudam a empresa a decidir."
+    description: >-
+      Entende a necessidade das áreas de negócio, modela os dados para relatórios, cria dashboards
+      (Power BI, Tableau, Looker), escreve DAX/SQL e mantém indicadores confiáveis e atualizados.
+      Na versão Developer, pesa mais a parte técnica (modelagem, ETL, performance).
+    day_to_day:
+      - Levantar requisitos com as áreas de negócio
+      - Modelar dados e criar medidas (DAX/SQL)
+      - Desenvolver e manter dashboards e relatórios
+      - Cuidar de cargas, performance e governança dos BIs
+    typical_skills: [Power BI, DAX, SQL, modelagem dimensional, ETL, Excel, comunicação]
+    search_terms: [bi developer, bi analyst, business intelligence analyst, analista de bi, desenvolvedor power bi, analista de business intelligence]
+    title_include:
+      - '\b(bi|business intelligence|power ?bi)\b.{0,25}\b(developer|analyst|engineer|specialist|consultant|analista|desenvolvedor[a]?|engenheir[oa]|especialista|consultor[a]?)\b'
+      - '\b(analista|desenvolvedor[a]?|especialista|consultor[a]?|engenheir[oa])\b.{0,20}\b(bi|business intelligence|power ?bi)\b'
+    title_exclude:
+      - '\b(director|diretor[a]?|vp|vice president|head of|manager|gerente|coordenador[a]?)\b'
+      - '\b(sales|vendas|account|comercial)\b'
+
+  ai_ml_engineer:
+    label: "AI/ML Engineer (LLM/GenAI)"
+    summary: "Constrói produtos e sistemas com modelos de IA, hoje muito com LLMs."
+    description: >-
+      Desenvolve soluções com machine learning e IA generativa: integra LLMs, monta RAG e agentes,
+      avalia a qualidade das respostas e leva isso para produção com boas práticas de software.
+      É um cargo de engenharia: código de produção pesa tanto quanto o modelo.
+    day_to_day:
+      - Integrar LLMs e APIs de IA em produtos
+      - Construir RAG, agentes e ferramentas
+      - Criar avaliações (evals) de qualidade
+      - Colocar modelos e serviços em produção
+    typical_skills: [Python, LLMs, RAG, agentes, avaliação de LLMs, APIs, cloud, MLOps]
+    search_terms: [machine learning engineer, ai engineer, llm engineer, engenheiro de machine learning, engenheiro de ia]
+    title_include:
+      - '\b(machine learning|ml)\b.{0,30}\b(engineer|engineering|engenheir[oa]|developer|desenvolvedor[a]?|specialist|especialista)\b'
+      - '\b(ai|ia|genai|gen ai|llm|applied ai|generative ai|inteligencia artificial)\b.{0,30}\b(engineer|engenheir[oa]|developer|desenvolvedor[a]?|specialist|especialista)\b'
+      - '\b(engenheir[oa]|desenvolvedor[a]?)\b.{0,25}\b(machine learning|ia|inteligencia artificial|ml)\b'
+    title_exclude:
+      - '\b(sales|vendas|account executive|recruit\w*|marketing|legal|counsel|product manager|designer)\b'
+      - '\b(director|diretor[a]?|vp|vice president|head of|manager|gerente)\b'
+      - '\b(support|suporte|solutions? (engineer|architect)|arquitet[oa] de solu\w+)\b'
+
+  data_scientist:
+    label: "Data Scientist"
+    summary: "Usa estatística e machine learning para responder perguntas e prever coisas."
+    description: >-
+      Investiga dados para gerar respostas e previsões: testes A/B, modelos preditivos, séries
+      temporais, inferência causal. Traduz resultados em decisões para o negócio, então
+      comunicação e estatística são tão importantes quanto o código.
+    day_to_day:
+      - Explorar dados e formular hipóteses
+      - Treinar e avaliar modelos preditivos
+      - Desenhar e analisar experimentos (A/B)
+      - Apresentar conclusões para o negócio
+    typical_skills: [Python, SQL, estatística, machine learning, testes A/B, comunicação]
+    search_terms: [data scientist, cientista de dados]
+    title_include:
+      - '\bdata scien(tist|ce)\b'
+      - '\bcientista de dados\b'
+      - '\bciencia de dados\b'
+      - '\b(applied|decision) scientist\b'
+    title_exclude:
+      - '\b(director|diretor[a]?|vp|vice president|head of|manager|gerente)\b'
+      - '\b(professor|teacher|instructor|tutor)\b'
+
+  data_analyst:
+    label: "Data Analyst"
+    summary: "Analisa dados para explicar o que aconteceu e acompanhar indicadores."
+    description: >-
+      Responde perguntas do negócio com dados: consultas SQL, planilhas, dashboards e análises
+      descritivas. É a porta de entrada mais comum na área de dados.
+    day_to_day:
+      - Escrever consultas SQL e montar bases de análise
+      - Criar relatórios e dashboards
+      - Acompanhar KPIs e explicar variações
+      - Apoiar decisões das áreas com números
+    typical_skills: [SQL, Excel, Power BI/Tableau, Python, estatística básica, comunicação]
+    search_terms: [data analyst, analista de dados]
+    title_include:
+      - '\bdata analyst\b'
+      - '\banalista de dados\b'
+    title_exclude:
+      - '\b(director|diretor[a]?|vp|head of|manager|gerente)\b'
+
+  data_engineer:
+    label: "Data Engineer"
+    summary: "Constrói e mantém os pipelines que levam os dados até quem precisa deles."
+    description: >-
+      Projeta a infraestrutura de dados: ingestão, pipelines (batch e streaming), data lakes e
+      warehouses, orquestração e performance. Garante que os dados cheguem completos, no prazo
+      e com qualidade.
+    day_to_day:
+      - Construir pipelines de ingestão e transformação
+      - Orquestrar cargas (Airflow etc.)
+      - Modelar data lakes/warehouses
+      - Monitorar qualidade, custos e performance
+    typical_skills: [Python, SQL, Spark, Airflow, cloud, modelagem de dados, Kafka]
+    search_terms: [data engineer, engenheiro de dados]
+    title_include:
+      - '\bdata engineer'
+      - '\bengenheir[oa] de dados\b'
+    title_exclude:
+      - '\b(director|diretor[a]?|vp|head of|manager|gerente)\b'

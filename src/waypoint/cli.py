@@ -191,12 +191,23 @@ def run(no_llm: bool = typer.Option(False, "--no-llm", help="Usa só o extrator 
 
 
 @app.command()
-def ui():
-    """Abre a interface web local (Streamlit)."""
+def ui(no_browser: bool = typer.Option(False, "--no-browser", help="Só sobe o servidor, sem abrir o navegador.")):
+    """Abre a interface (em segundo plano, sem precisar deixar o terminal aberto)."""
+    from .launcher import URL, main
+    code = main(open_browser=not no_browser, auto_update=False)
+    if code == 0:
+        typer.secho(f"Interface rodando em {URL} — pode fechar este terminal. "
+                    "Para encerrar, use o botão 'Encerrar Waypoint' na própria interface.", fg="green")
+    raise typer.Exit(code)
+
+
+@app.command()
+def update():
+    """Atualiza tudo (coleta → extração → plano → relatórios). É o que o botão da interface roda."""
+    from .updater import run_update
     cfg, _ = _setup()
-    app_file = Path(__file__).parent / "ui" / "app.py"
-    subprocess.run([sys.executable, "-m", "streamlit", "run", str(app_file), "--server.headless", "false"],
-                   cwd=cfg.paths.root, check=False)
+    res = run_update(cfg)
+    typer.secho(f"Atualização concluída: {res}", fg="green")
 
 
 # ----------------------------------------------------------------------------- eval

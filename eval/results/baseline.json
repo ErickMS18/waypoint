@@ -2,25 +2,25 @@
   "n_jobs": 40,
   "n_gold_jobs": 40,
   "skills": {
-    "precision": 0.9230769230769231,
+    "precision": 0.917910447761194,
     "recall": 0.7961165048543689,
-    "f1": 0.8549087749782799,
+    "f1": 0.852686308492201,
     "tp": 492,
-    "fp": 41,
+    "fp": 44,
     "fn": 126
   },
   "skills_with_level": {
-    "precision": 0.8292682926829268,
+    "precision": 0.8246268656716418,
     "recall": 0.7152103559870551,
-    "f1": 0.7680278019113814,
+    "f1": 0.7660311958405546,
     "tp": 442,
-    "fp": 91,
+    "fp": 94,
     "fn": 176
   },
   "level_accuracy_on_matched": 0.8983739837398373,
   "seniority_accuracy": 0.9032258064516129,
   "unmapped_rate": 0.0,
-  "macro_f1_per_job": 0.8322997181315325,
+  "macro_f1_per_job": 0.8303814037844326,
   "by_lang": {
     "en": {
       "precision": 0.8945147679324894,
@@ -32,31 +32,31 @@
       "n": 20
     },
     "pt": {
-      "precision": 0.9459459459459459,
+      "precision": 0.9364548494983278,
       "recall": 0.813953488372093,
-      "f1": 0.875,
+      "f1": 0.8709175738724729,
       "tp": 280,
-      "fp": 16,
+      "fp": 19,
       "fn": 64,
       "n": 20
     }
   },
   "by_role": {
     "ai_ml_engineer": {
-      "precision": 0.9043824701195219,
+      "precision": 0.8972332015810277,
       "recall": 0.7964912280701755,
-      "f1": 0.8470149253731344,
+      "f1": 0.8438661710037175,
       "tp": 227,
-      "fp": 24,
+      "fp": 26,
       "fn": 58,
       "n": 20
     },
     "data_scientist": {
-      "precision": 0.9397163120567376,
+      "precision": 0.9363957597173145,
       "recall": 0.7957957957957958,
-      "f1": 0.8617886178861788,
+      "f1": 0.8603896103896104,
       "tp": 265,
-      "fp": 17,
+      "fp": 18,
       "fn": 68,
       "n": 20
     }
@@ -135,11 +135,11 @@
       "fn": 0
     },
     "mlops": {
-      "precision": 0.9782608695652174,
+      "precision": 0.9375,
       "recall": 0.6923076923076923,
-      "f1": 0.8108108108108107,
+      "f1": 0.7964601769911505,
       "tp": 45,
-      "fp": 1,
+      "fp": 3,
       "fn": 20
     },
     "eng": {
@@ -151,11 +151,11 @@
       "fn": 28
     },
     "bi": {
-      "precision": 0.8666666666666667,
+      "precision": 0.8125,
       "recall": 0.8125,
-      "f1": 0.8387096774193549,
+      "f1": 0.8125,
       "tp": 13,
-      "fp": 2,
+      "fp": 3,
       "fn": 3
     },
     "spoken": {
@@ -176,8 +176,8 @@
     }
   },
   "skills_f1_ci95": [
-    0.8299065420560746,
-    0.8780487804878048
+    0.8273092369477911,
+    0.8764705882352941
   ],
   "top_false_positives": [
     [
@@ -205,11 +205,11 @@
       2
     ],
     [
-      "product_sense",
+      "model_serving",
       2
     ],
     [
-      "software_engineering",
+      "product_sense",
       2
     ]
   ],
@@ -427,19 +427,20 @@
       "lang": "pt",
       "role": "ai_ml_engineer",
       "tp": 10,
-      "fp": 1,
+      "fp": 2,
       "fn": 5,
       "tp_req": 10,
-      "fp_req": 1,
+      "fp_req": 2,
       "fn_req": 5,
       "level_correct": 10,
       "matched": 10,
       "sen_gold": "senior",
       "sen_pred": "senior",
       "unmapped": 0,
-      "n_pred": 11,
+      "n_pred": 12,
       "fp_ids": [
-        "llms"
+        "llms",
+        "model_serving"
       ],
       "fn_ids": [
         "apis",
@@ -477,18 +478,20 @@
       "lang": "pt",
       "role": "ai_ml_engineer",
       "tp": 13,
-      "fp": 0,
+      "fp": 1,
       "fn": 3,
       "tp_req": 13,
-      "fp_req": 0,
+      "fp_req": 1,
       "fn_req": 3,
       "level_correct": 13,
       "matched": 13,
       "sen_gold": "senior",
       "sen_pred": "senior",
       "unmapped": 0,
-      "n_pred": 13,
-      "fp_ids": [],
+      "n_pred": 14,
+      "fp_ids": [
+        "kpi_metrics"
+      ],
       "fn_ids": [
         "communication",
         "data_quality",
@@ -1121,19 +1124,20 @@
       "lang": "pt",
       "role": "data_scientist",
       "tp": 19,
-      "fp": 2,
+      "fp": 3,
       "fn": 5,
       "tp_req": 18,
-      "fp_req": 3,
+      "fp_req": 4,
       "fn_req": 6,
       "level_correct": 18,
       "matched": 19,
       "sen_gold": "unknown",
       "sen_pred": "unknown",
       "unmapped": 0,
-      "n_pred": 21,
+      "n_pred": 22,
       "fp_ids": [
         "fine_tuning",
+        "model_serving",
         "statistics"
       ],
       "fn_ids": [

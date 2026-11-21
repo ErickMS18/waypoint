@@ -54,7 +54,7 @@ def test_full_pipeline_baseline(cfg, db, transport, tmp_path):
     run_extraction(db, db.jobs(), "baseline")
     a = analyze(cfg, db, "baseline")
     assert len(a.jobs_df) == db.count_jobs() >= 6
-    assert set(a.tables) == {"ai_ml_engineer", "data_scientist"}
+    assert set(a.tables) == set(cfg.roles) and {"ai_ml_engineer", "data_scientist", "bi_analyst"} <= set(a.tables)
     top = a.overall.iloc[0]
     assert top["skill_id"] == "python" and 0 < top["share_any"] <= 1
     assert set(a.regions["region"]) >= {"BR", "INTL", "REMOTE_BR_OK"}

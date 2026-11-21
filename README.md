@@ -1,27 +1,51 @@
-# 🧭 Waypoint — a personal career radar
+<p align="center"><img src="assets/cover.png" alt="Waypoint — AI career radar" width="820"></p>
+
+# Waypoint — an LLM-powered career radar for data & AI roles
 
 [![tests](https://github.com/ErickMS18/waypoint/actions/workflows/tests.yml/badge.svg)](https://github.com/ErickMS18/waypoint/actions/workflows/tests.yml)
 ![python](https://img.shields.io/badge/python-3.11%2B-blue)
 ![license](https://img.shields.io/badge/license-MIT-green)
 
-**Waypoint reads the job market for the roles you want, tells you what you already have and what is
-missing, and turns that into a weekly plan that respects more than just your career.**
+**Waypoint answers one question with real data: _"what does the market actually ask for in the roles I want,
+what am I missing, and what should I study this week?"_**
 
-You pick target roles (e.g. *AI/ML Engineer* and *Data Scientist*). Waypoint collects real postings
-from public job-board APIs, uses an LLM to extract required vs. nice-to-have skills and seniority,
-compares them with your resume and produces:
+It collects real job postings from public job-board APIs, uses an LLM to turn each posting into structured data
+(skills, required vs. nice-to-have, seniority), compares the market with your resume and builds a weekly study plan.
+Extraction quality is measured against a labeled gold set, and the numbers are in this README.
 
-- a **market report** — the most requested skills per role, Brazil vs. international remote, seniority mix and trends over time;
-- a **gap analysis** — have / partial / missing, ranked by demand;
-- a **focus-weighted study plan** — career, exploration and personal interests each get protected time;
-- the **numbers for a LinkedIn post** ("I analyzed N postings for X: the most requested skills are…").
+> I built it for my own job search (AI/ML Engineer, Data Scientist, BI/Analytics Engineer, MLOps), and I use it every week.
 
-Everything runs locally. Your resume, your profile and the posting texts never leave your machine
-except for the redacted text sent to the LLM provider you configure.
+## What it found (snapshot, Nov 2026)
 
-> v1 = career analyzer (this release). v2 = personal orchestrator (planned, see [Roadmap](#roadmap)).
+**360 postings · 180 companies · 5 roles · Brazil + remote-friendly international** (one click refreshes them):
 
----
+| Role | Postings | Most requested skills (share of postings) |
+|---|---:|---|
+| AI/ML Engineer (LLM/GenAI) | 177 | Python 68% · AI agents & tool use 54% · LLMs 53% · Machine Learning 40% · RAG 40% |
+| Data Scientist | 104 | Python 90% · SQL 74% · Machine Learning 68% · Statistics 52% · A/B testing 35% |
+| BI Developer / BI Analyst | 43 | Power BI/DAX 79% · SQL 74% · Excel 51% · Data modeling 47% · ETL/ELT 42% |
+| Analytics Engineer | 24 | SQL 100% · Python 79% · dbt 71% · Data modeling 54% · Tableau/Looker 54% |
+| MLOps Engineer | 12 | Python 92% · CI/CD 58% · AWS 50% · Infrastructure as code 50% · Kubernetes 42% |
+
+Small samples (MLOps, Analytics Engineer) are flagged as unstable in the app; they grow with each weekly refresh.
+
+<p align="center"><img src="assets/screenshots/market.png" alt="Market page: most requested skills, required vs nice-to-have" width="900"></p>
+
+## What it does
+
+| | |
+|---|---|
+| **Market radar** | Most requested skills per role (required vs. nice-to-have), Brazil vs. international, seniority mix, rising skills over time. Click a bar to see the postings behind it. |
+| **Role comparison** | The same skills side by side across up to 3 roles, plus what is *typical* of each role. Useful to decide between, say, BI and Analytics Engineering. |
+| **Gap analysis** | Reads your resume (PII redacted first), scores your level per skill (0–3, editable) and ranks gaps by `demand × (1 − coverage)`. |
+| **Weekly plan** | Splits your weekly hours by focus weights (career / exploration / personal interests). Exploration time is protected; nothing is ever called "irrelevant": conflicts become explicit trade-offs. Check items off as you go. |
+| **Job explorer** | Filter postings by role, region, seniority and skills; open one to see what it asks for and what you still don't cover. |
+| **Role catalog** | Each role comes with a plain-language description. Turn roles on/off or create a custom role from a job title. |
+| **One-click app** | A desktop shortcut opens the app without a terminal; the **Update** button collects, extracts and re-plans in the background. |
+
+<p align="center"><img src="assets/screenshots/compare.png" alt="Compare roles: AI/ML Engineer vs Data Scientist vs BI" width="900"></p>
+
+The interface is in Portuguese (it is my personal tool); code, docs and the evaluation are in English.
 
 ## How it works
 
@@ -32,107 +56,63 @@ flowchart LR
       LV[Lever]
       ASH[Ashby]
       HM["Himalayas<br/>remote, open to Brazil"]
-      IN["inbox/<br/>postings you paste"]
-      GP["Gupy<br/>opt-in, off by default"]
+      GP["Gupy<br/>opt-in, local only"]
+      IN["Postings you paste"]
     end
-    Sources --> N["Normalize · role filter by title regex · dedupe"] --> DB[("SQLite<br/>data/waypoint.db")]
+    Sources --> N["Normalize · role match by title regex · near-duplicate removal"] --> DB[("SQLite")]
     DB --> X{Extractor}
-    X -->|"LLM (JSON validated, cached)"| C[Canonicalize to a 96-skill taxonomy]
+    X -->|"LLM → JSON → Pydantic (cached)"| C["Canonicalize to a 101-skill taxonomy"]
     X -->|dictionary baseline| C
-    C --> M["Market analysis<br/>demand = required + 0.5 · nice"]
-    CV[Your resume] --> R[Redact PII] --> P["Profile: skill levels 0-3<br/>+ manual overrides"]
+    C --> M["Market stats<br/>demand = required + 0.5 · nice"]
+    CV[Resume] --> R[Redact PII] --> P["Skill levels 0–3<br/>+ manual overrides"]
     M & P --> G["Gap = demand × (1 − coverage)"]
-    G --> PL["Plan: hours split by focus weights<br/>protected exploration · bridges · trade-offs"]
-    M & G & PL --> REP["Report · charts · post numbers · Streamlit UI"]
+    G --> PL["Weekly plan<br/>focus weights · protected exploration · trade-offs"]
+    M & G & PL --> UI["Streamlit app · Markdown report · charts"]
 ```
 
-**Key design choices**
+### Engineering decisions (the parts I'd talk about in an interview)
 
 | Decision | Why |
 |---|---|
-| Official public job-board APIs, not scraping | Stable JSON, no login, allowed by the providers. LinkedIn and Indeed are excluded because their terms forbid automated collection. |
-| LLM output → Pydantic schema → closed taxonomy | Free-text skills ("Py", "python3", "Python 3.x") are mapped to one id, so counting is meaningful. Unknown skills are kept as `other:*` and surfaced as possible emerging topics. |
-| Dictionary baseline kept alongside the LLM | Gives the evaluation a reference point and lets the tool work without any API key. |
-| Provider-agnostic LLM client (plain HTTP) | Gemini, Anthropic, OpenAI or any OpenAI-compatible endpoint (Ollama for fully local). One `.env` line to switch. |
-| Content-hash cache for every LLM call | Re-running costs nothing; only new or changed postings are sent. |
-| Focus weights with protected exploration | The plan never declares a project "irrelevant": it shows the trade-off and asks. Interests outside the career get *bridges* (e.g. a hobby-themed project that trains a target skill). |
-
-## Sources and compliance
-
-| Source | Access | Notes |
-|---|---|---|
-| [Greenhouse Job Board API](https://developers.greenhouse.io/job-board.html) | Public GET, no auth | Configure company board tokens in `config/sources.yaml`. |
-| [Lever Postings API](https://github.com/lever/postings-api) | Public GET, no auth | US and EU hosts handled automatically. |
-| [Ashby Job Postings API](https://developers.ashbyhq.com/docs/public-job-posting-api) | Public GET, no auth | |
-| [Himalayas Remote Jobs API](https://himalayas.app/docs/remote-jobs-api) | Public, free | Remote roles; `country: Brazil` keeps only jobs open to people in Brazil. Attribution is shown in reports; data is not redistributed. |
-| Gupy portal search | Undocumented endpoint | **Disabled by default.** Gupy's terms of use forbid aggregating or copying platform content. If you enable it, use it for personal analysis only, keep the slow pace, and publish only aggregate numbers. |
-| `inbox/` and the UI form | You paste postings | Anything you found elsewhere. |
-
-All collectors send a descriptive User-Agent, wait between requests to the same host and back off on HTTP 429.
-Posting texts are stored only in your local database; the repository and the public report contain only aggregate counts.
-
-## Quickstart (Windows / PowerShell)
-
-```powershell
-git clone https://github.com/ErickMS18/waypoint.git
-cd waypoint
-python -m venv .venv
-.\.venv\Scripts\Activate.ps1
-pip install -e ".[dev]"
-
-waypoint init                      # creates data/, profile/, reports/ and .env
-notepad .env                   # paste ONE LLM key (Gemini has a free tier)
-
-waypoint boards check              # optional: which configured companies exist / have jobs
-waypoint collect                   # fetch postings for your target roles
-waypoint extract                   # LLM extraction (use --extractor baseline for no-LLM mode)
-waypoint profile C:\path\to\resume.pdf
-waypoint report                    # reports/waypoint_report.md (private) + charts
-waypoint report --public           # reports/public/ (market only, safe to share)
-waypoint ui                        # local web app
-```
-
-macOS/Linux: same commands, activate with `source .venv/bin/activate`.
-
-### Configuration
-
-| File | What it controls |
-|---|---|
-| `config/targets.yaml` | Target roles: title regexes, search terms, seniority you are aiming for. |
-| `config/sources.yaml` | Which sources are on and which companies (boards) to read. |
-| `config/focus.yaml` | Weekly hours, focus weights (career / exploration / interests), exploration topics, interests. |
-| `.env` | `LLM_PROVIDER`, `LLM_MODEL` and the key. Never committed. |
-| `profile/overrides.yaml` | Your manual corrections to skill levels (also editable in the UI). |
+| **Official public APIs, not scraping** | Stable JSON, no login, allowed by the providers. LinkedIn and Indeed are excluded because their terms forbid automated collection. |
+| **LLM output → Pydantic schema → closed taxonomy** | Free text ("Py", "python3", "Python 3.x") maps to one id, so counts mean something. Unknown skills are kept as `other:*` and surface as possible emerging topics. Invalid JSON gets one repair retry. |
+| **A dictionary baseline next to the LLM** | Gives the evaluation a reference point and keeps the tool useful with no API key. It turned out to be a strong baseline (see below). |
+| **Provider-agnostic LLM client over plain HTTP** | Gemini, Anthropic, OpenAI or any OpenAI-compatible endpoint (Ollama for fully local). One `.env` line to switch. Throttling and 429/503 backoff built in. |
+| **Content-hash cache for every LLM call** | Re-runs are free; only new or changed postings are sent. A full weekly refresh costs a few dozen calls. |
+| **Background updater + status file** | The UI never blocks: the update runs in a window-less process and reports progress in a JSON file the page polls. Closing the browser doesn't kill it; a dead process is detected instead of showing "running" forever. |
+| **Roles as data, not code** | A YAML catalog (title regexes, search terms, descriptions). Turning a role off hides it without deleting data; postings are re-labeled when the catalog changes. |
+| **Small-sample guardrails** | Per-role percentages are flagged when a role has fewer than 10 postings, and trends need ≥ 10 recent and ≥ 10 older postings. |
+| **Privacy enforced by tests** | A test fails if `.env`, `data/`, `profile/`, `reports/` or local configs stop being git-ignored. |
 
 ## Evaluation
 
-Extraction quality is measured against a hand-labeled gold set of **real postings** sampled from
-actual collections (stratified by role and language, at most 3 per company). Labels follow
-[eval/GUIDELINES.md](eval/GUIDELINES.md); the metric is micro precision/recall/F1 over
-`(posting, skill)` pairs in the closed taxonomy, with a 95% bootstrap confidence interval over postings.
-"F1 incl. required/nice" only counts a hit if the requirement level also matches.
-
-**How the gold set was built (read before trusting the numbers):**
-- 40 postings drawn by `waypoint eval sample` (seed 42) from a real collection on 2026-11-21: 20 AI/ML Engineer + 20 Data Scientist; 20 in English and 20 detected as Portuguese (one of them is in Spanish).
-- The skill taxonomy was frozen *before* labeling and has not been tuned on these postings.
-- Labels were drafted by an AI assistant (Claude) following the guidelines, without seeing any extractor output, and are marked `pending human review` in `eval/gold.jsonl`. A human review pass is planned; results will be re-run after it.
-- Scoring is closed-vocabulary, which favors the dictionary baseline (it can only ever predict taxonomy skills). The LLM's advantage shows up in skills that are described rather than named ("communicate clearly", "monitor models in production").
+Extraction quality is measured against a labeled gold set of **real postings** (stratified by role and language,
+at most 3 per company). Labels follow [eval/GUIDELINES.md](eval/GUIDELINES.md). The metric is micro
+precision/recall/F1 over `(posting, skill)` pairs in the closed taxonomy, with a 95% bootstrap confidence interval
+over postings. "F1 incl. required/nice" only counts a hit if the requirement level also matches.
 
 <!-- EVAL:START -->
-Gold set: **40 real job postings** (20 AI/ML Engineer (LLM/GenAI), 20 Data Scientist; 20 EN, 20 PT), labeled with 618 skill labels from a 96-skill taxonomy. Evaluated on 2026-11-21.
+Gold set: **40 real job postings** (20 AI/ML Engineer (LLM/GenAI), 20 Data Scientist; 20 EN, 20 PT), labeled with 618 skill labels from a 101-skill taxonomy. Evaluated on 2026-11-21.
 
 | Extractor | Skill P | Skill R | Skill F1 (95% CI) | F1 incl. required/nice | Seniority acc. | Unmapped |
 |---|---:|---:|---:|---:|---:|---:|
 | Dictionary baseline | 0.92 | 0.80 | **0.85** (0.83–0.88) | 0.77 | 0.90 | 0% |
-| LLM (gemini/gemini-3.5-flash-lite) | 0.98 | 0.75 | **0.85** (0.82–0.88) | 0.81 | 1.00 | 1% |
+| LLM (gemini/gemini-3.5-flash-lite) | 0.97 | 0.73 | **0.83** (0.80–0.86) | 0.80 | 0.97 | 1% |
 
 Skill F1 by posting language:
 
 | Extractor | EN (n=20) | PT (n=20) |
 |---|---:|---:|
-| Dictionary baseline | 0.83 | 0.88 |
-| LLM (gemini/gemini-3.5-flash-lite) | 0.84 | 0.87 |
+| Dictionary baseline | 0.83 | 0.87 |
+| LLM (gemini/gemini-3.5-flash-lite) | 0.80 | 0.86 |
 <!-- EVAL:END -->
+
+**How to read these numbers**
+
+- The LLM is the more *precise* extractor (0.97: when it says a posting asks for a skill, it almost always does) and is better at telling required from nice-to-have and at seniority. The baseline has higher recall because it matches every alias it sees. On this closed-vocabulary metric they tie within the confidence interval; the app uses the LLM output and keeps the baseline as a fallback.
+- **How the gold set was built:** 40 postings drawn by `waypoint eval sample` (seed 42) on 2026-11-21: 20 AI/ML Engineer + 20 Data Scientist, 20 English + 20 Portuguese. Labels were drafted by an AI assistant (Claude) following the guidelines, without seeing any extractor output, and are marked `pending human review` in `eval/gold.jsonl`.
+- The taxonomy was frozen (96 skills) before labeling. Five skills were added later for the new BI/MLOps roles (SSIS/SSAS/SSRS, Fabric/Synapse, KPI definition, model serving, ETL tools); the scores above were re-run after that change, and predictions of those new skills count as false positives because the gold labels predate them.
+- Postings for the three newer roles (BI, Analytics Engineer, MLOps) are not in the gold set yet; extending it is on the roadmap.
 
 Reproduce:
 
@@ -143,13 +123,67 @@ waypoint eval run --update-readme   # baseline + LLM, writes eval/RESULTS.md and
 
 The repository contains only labels and posting ids/URLs (`eval/gold.jsonl`), never the posting texts.
 
+## Quickstart
+
+### Windows, one click
+
+1. Install Python 3.11+ and clone the repo (or download the ZIP).
+2. Optional but recommended: create `.env` with a free Gemini key: `GEMINI_API_KEY=...` (see `.env.example`).
+3. Put your resume (PDF/DOCX) in `profile/`, or upload it later in the app.
+4. Double-click **`RODAR_WAYPOINT.bat`**. It creates the environment, collects postings, runs the extraction,
+   the evaluation and the tests, and creates a **Waypoint** shortcut on the Desktop and in the Start menu.
+
+From then on, just open the **Waypoint** shortcut: it starts the app in the background (no terminal window),
+opens the browser and, if the data is more than a day old, refreshes it automatically. The **Atualizar tudo**
+button refreshes on demand; **Encerrar Waypoint** shuts it down.
+
+### Any OS, command line
+
+```bash
+git clone https://github.com/ErickMS18/waypoint.git && cd waypoint
+python -m venv .venv && source .venv/bin/activate      # Windows: .\.venv\Scripts\Activate.ps1
+pip install -e ".[dev]"
+
+waypoint init                    # creates data/, profile/, reports/ and .env
+waypoint profile path/to/resume.pdf
+waypoint update                  # collect → extract (LLM + baseline) → plan → reports
+waypoint ui                      # opens the app (runs in the background)
+waypoint report --public         # market-only report, safe to share
+```
+
+Other commands: `waypoint boards check`, `collect`, `extract [--extractor baseline]`, `analyze`, `add` (paste a posting), `eval sample|fetch|run`.
+
+## Configuration
+
+| File | What it controls |
+|---|---|
+| `config/targets.yaml` | Which roles are on (`roles_enabled`), custom roles, the seniority you are aiming for. |
+| `src/waypoint/resources/roles_catalog.yaml` | The role catalog: descriptions, search terms and title regexes. |
+| `config/sources.yaml` | Which sources are on and which companies (boards) to read. |
+| `config/focus.yaml` | Weekly hours, focus weights, exploration topics, personal interests. |
+| `config/*.local.yaml` | Your machine-only overrides (written by the app; git-ignored). |
+| `.env` | `LLM_PROVIDER`, `LLM_MODEL` and the key. Never committed. |
+
+## Sources and compliance
+
+| Source | Access | Notes |
+|---|---|---|
+| [Greenhouse Job Board API](https://developers.greenhouse.io/job-board.html) | Public GET, no auth | Company board tokens in `config/sources.yaml`. |
+| [Lever Postings API](https://github.com/lever/postings-api) | Public GET, no auth | US and EU hosts handled automatically. |
+| [Ashby Job Postings API](https://developers.ashbyhq.com/docs/public-job-posting-api) | Public GET, no auth | |
+| [Himalayas Remote Jobs API](https://himalayas.app/docs/remote-jobs-api) | Public, free | Remote roles open to people in Brazil. Attribution shown in reports; data not redistributed. |
+| Gupy portal search | Undocumented endpoint | **Off by default.** Gupy's terms forbid aggregating platform content; if you enable it locally, use it for personal analysis only and publish only aggregate numbers. |
+| Pasted postings | You | Anything you found elsewhere (LinkedIn, InfoJobs…), pasted in the app or dropped in `inbox/`. |
+
+Collectors send a descriptive User-Agent, wait between requests to the same host and back off on HTTP 429.
+Posting texts stay in your local database; the repository and public reports contain only aggregate counts.
+
 ## Privacy
 
-- `.env`, `data/`, `profile/`, `reports/` and `inbox/*` are git-ignored, and
-  `tests/test_eval_privacy.py` fails if any of them stops being ignored or gets tracked.
-- Before your resume goes to the LLM, the first line (name), e-mails, phone numbers, links and document
-  numbers are removed (`profile/resume_redacted.txt` shows exactly what was sent). `waypoint profile --no-llm`
-  sends nothing.
+- `.env`, `data/`, `profile/`, `reports/`, `inbox/*` and `config/*.local.yaml` are git-ignored, and
+  `tests/test_eval_privacy.py` fails if any of them stops being ignored.
+- Before the resume goes to the LLM, the name line, e-mails, phone numbers, links and document numbers are removed
+  (`profile/resume_redacted.txt` shows exactly what was sent). `waypoint profile --no-llm` sends nothing.
 - On free LLM tiers the provider may use requests to improve its products; use a paid key or a local model
   (`LLM_PROVIDER=openai_compatible` + Ollama) if that matters to you.
 
@@ -161,26 +195,27 @@ src/waypoint/
   llm/            provider-agnostic JSON client (retries, throttling, cache)
   extract/        LLM prompt + dictionary baseline + canonicalization
   analysis/       market stats, gap, focus-weighted plan
-  report/         Markdown report, charts, LinkedIn numbers
-  eval/           sampling, metrics, bootstrap CI
-  ui/app.py       Streamlit app
-  resources/      skills taxonomy, project templates, report template
-tests/            offline tests with a fake network (pytest)
+  report/         Markdown report, charts, post numbers
+  eval/           sampling, metrics, bootstrap CI, README update
+  ui/app.py       Streamlit app (8 pages)
+  updater.py      background "update everything" + status file
+  launcher.py     one-click start (no terminal), used by the desktop shortcut
+  resources/      skill taxonomy, role catalog, project templates, report template
+scripts/          Windows runner, shortcut target, cover generator
+tests/            54 offline tests with a fake network (pytest; CI on Ubuntu + Windows)
 ```
 
 ## Limitations
 
-- Coverage depends on which companies you list; Greenhouse/Lever/Ashby skew toward tech companies.
-  Many Brazilian companies hire through Gupy, which is off by default for the reason above.
-- Shares are computed per posting, not per hire; one company with many similar openings can tilt the numbers.
-- Trends compare postings by publication date and need at least 10 recent and 10 older postings; collecting regularly builds that history.
-- Skill effort estimates in the plan are rough defaults per skill (`skills.yaml`), meant for ordering, not promises.
+- Coverage depends on which companies and sources are configured; Greenhouse/Lever/Ashby skew toward tech companies, and most Brazilian BI postings come from Gupy (local opt-in).
+- Shares are computed per posting, not per hire; one company with many similar openings can tilt the numbers (near-duplicates are removed, distinct openings are not).
+- Effort estimates in the plan are rough per-skill defaults, meant for ordering, not promises.
+- The gold set covers 2 of the 5 roles and awaits a human review pass.
 
 ## Roadmap
 
-**v2 — personal orchestrator.** Takes the v1 plan plus current projects (college, internship, research,
-personal) with deadlines; builds and adjusts the week and the day ("what now", daily goal) and re-plans
-when something slips — keeping the same focus weights and protected exploration.
+- Extend the gold set to BI, Analytics Engineer and MLOps postings; human review of all labels.
+- **v2 — personal orchestrator:** combine the plan with current projects and deadlines (college, internship, research) into a daily "what now", re-planning when something slips, with the same focus weights and protected exploration.
 
 ## License
 

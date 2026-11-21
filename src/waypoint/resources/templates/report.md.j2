@@ -103,7 +103,7 @@ Ainda não há vagas suficientes com data para comparar períodos (mínimo de 10
 {% for e in plan.exploration %}
 - {{ e.name }} — {{ e.why }}
 {% else %}
-- Nenhum tópico ainda. Adicione em `config/focus.yaml` → `exploration.topics`.
+- Nenhum tópico ainda. Adicione na interface (Plano → Focos e pesos).
 {% endfor %}
 
 ### Interesses e pontes
@@ -114,7 +114,7 @@ Ainda não há vagas suficientes com data para comparar períodos (mínimo de 10
 {% for i in plan.interests %}
 - {{ i.name }} — {{ i.horas }}h/semana
 {% else %}
-- Nenhum interesse cadastrado (`config/focus.yaml` → `interests`).
+- Nenhum interesse cadastrado (adicione em Plano → Focos e pesos).
 {% endfor %}
 {% endfor %}
 
