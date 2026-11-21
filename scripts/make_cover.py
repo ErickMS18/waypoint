@@ -17,7 +17,7 @@ from PIL import Image, ImageDraw, ImageFont
 
 CONFIG = {
     "title": "Waypoint",
-    "subtitle": "AI Career Radar · LLM-powered job market analysis",
+    "subtitle": "AI career radar + personal planner · LLM-powered",
     "stats": [["360", "real job postings"], ["180", "companies"], ["5", "target roles"]],
     "tech": "Python · LLMs · Pydantic · Streamlit · Evaluation (P/R/F1)",
     "url": "github.com/ErickMS18/waypoint",

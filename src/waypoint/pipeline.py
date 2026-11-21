@@ -67,9 +67,13 @@ def compute_gap(cfg: Config, a: Analysis) -> pd.DataFrame:
     return gap_table(a.focus_table, effective_levels(cfg.paths.profile))
 
 
-def make_plan(cfg: Config, a: Analysis, gap: pd.DataFrame, client=None) -> Plan:
+def make_plan(cfg: Config, a: Analysis, gap: pd.DataFrame, client=None, lang: Optional[str] = None) -> Plan:
+    if lang is None:
+        from .updater import load_ui_settings
+        lang = load_ui_settings(cfg).get("lang", "pt")
     roles = [r.get("label", rid) for rid, r in cfg.roles.items()]
-    return build_plan(gap, cfg.focus, roles=roles, skills_df=a.skills_df, emerging_df=a.emerging, client=client)
+    return build_plan(gap, cfg.focus, roles=roles, skills_df=a.skills_df, emerging_df=a.emerging, client=client,
+                      lang=lang)
 
 
 def make_report(cfg: Config, a: Analysis, *, gap: Optional[pd.DataFrame], plan: Optional[Plan],
@@ -104,9 +108,13 @@ def plan_path(cfg: Config) -> _Path:
     return cfg.paths.data / "plan.json"
 
 
-def save_plan(cfg: Config, plan: Plan) -> None:
+def save_plan(cfg: Config, plan: Plan, lang: Optional[str] = None) -> None:
     d = plan.to_dict()
     d["generated_at"] = _datetime.now(_tz.utc).isoformat(timespec="seconds")
+    if lang is None:
+        from .updater import load_ui_settings
+        lang = load_ui_settings(cfg).get("lang", "pt")
+    d["lang"] = lang
     plan_path(cfg).write_text(_json.dumps(d, ensure_ascii=False, indent=2), encoding="utf-8")
 
 

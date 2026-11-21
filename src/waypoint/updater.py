@@ -19,7 +19,7 @@ from .settings import Config
 
 STATUS_FILE = "update_status.json"
 SETTINGS_FILE = "ui_settings.json"
-DEFAULT_SETTINGS = {"auto_update_on_open": True, "auto_update_hours": 20}
+DEFAULT_SETTINGS = {"auto_update_on_open": True, "auto_update_hours": 20, "theme": "dark", "lang": "pt"}
 
 
 def _logs(cfg: Config) -> Path:
@@ -164,6 +164,7 @@ def load_ui_settings(cfg: Config) -> dict[str, Any]:
 def save_ui_settings(cfg: Config, **kw: Any) -> None:
     d = load_ui_settings(cfg)
     d.update(kw)
+    cfg.paths.data.mkdir(parents=True, exist_ok=True)
     (cfg.paths.data / SETTINGS_FILE).write_text(json.dumps(d, indent=2), encoding="utf-8")
 
 

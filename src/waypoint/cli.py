@@ -202,6 +202,26 @@ def ui(no_browser: bool = typer.Option(False, "--no-browser", help="Só sobe o s
 
 
 @app.command()
+def today():
+    """Mostra o plano de hoje (orquestrador): o que fazer agora e o resto do dia."""
+    from datetime import date
+
+    from . import orchestrator as orc
+    from .pipeline import load_plan
+    cfg, _ = _setup()
+    state = orc.State.load(orc.state_path(cfg.paths.data))
+    sched = orc.build_schedule(state, load_plan(cfg), today=date.today())
+    done, total = orc.today_progress(state, sched)
+    typer.secho(f"Hoje: {done:g}h de {total:g}h", bold=True)
+    for i, b in enumerate(sched.days[0].blocks):
+        icon = orc.AREA_ICON.get(b.area, "-")
+        extra = f" ({b.project})" if b.project and b.project != b.title else ""
+        typer.echo(f"{'→' if i == 0 else ' '} {icon} {b.title}{extra} · {b.hours:g}h" + (f" · prazo {b.due}" if b.due else ""))
+    for r in sched.risks:
+        typer.secho(f"⚠ {r.title} ({r.project}) vence {r.due}: faltam {r.missing:g}h", fg="yellow")
+
+
+@app.command()
 def update():
     """Atualiza tudo (coleta → extração → plano → relatórios). É o que o botão da interface roda."""
     from .updater import run_update

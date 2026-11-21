@@ -7,7 +7,9 @@ the home page shows its progress live.
 """
 from __future__ import annotations
 
+import json
 import os
+import signal
 import socket
 import subprocess
 import sys
@@ -25,6 +27,68 @@ def server_up(timeout: float = 0.5) -> bool:
             return True
     except OSError:
         return False
+
+
+def code_stamp() -> str:
+    """Changes whenever the package code changes (used to restart an outdated server)."""
+    pkg = Path(__file__).parent
+    return str(max(int(p.stat().st_mtime) for p in pkg.rglob("*.py")))
+
+
+def _info_path(root: Path) -> Path:
+    return root / "data" / "logs" / "ui_server.json"
+
+
+def register_server(root: Path) -> None:
+    """Called by the running app: remember which process serves the UI and with which code version."""
+    p = _info_path(root)
+    try:
+        cur = json.loads(p.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        cur = {}
+    if cur.get("pid") != os.getpid():
+        p.parent.mkdir(parents=True, exist_ok=True)
+        p.write_text(json.dumps({"pid": os.getpid(), "stamp": code_stamp()}), encoding="utf-8")
+
+
+def _pid_on_port() -> int | None:
+    if os.name != "nt":
+        return None
+    try:
+        out = subprocess.run(["netstat", "-ano", "-p", "TCP"], capture_output=True, text=True, timeout=10,
+                             creationflags=0x08000000).stdout
+    except (OSError, subprocess.SubprocessError):
+        return None
+    for line in out.splitlines():
+        parts = line.split()
+        if len(parts) >= 5 and parts[1].endswith(f":{PORT}") and parts[3].upper() in ("LISTENING", "ESCUTANDO"):
+            try:
+                return int(parts[4])
+            except ValueError:
+                return None
+    return None
+
+
+def stale_server_pid(root: Path) -> int | None:
+    """PID of a running UI server whose code is older than the code on disk (None if it is current)."""
+    try:
+        info = json.loads(_info_path(root).read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        info = {}
+    if info.get("stamp") == code_stamp():
+        return None
+    return info.get("pid") or _pid_on_port()
+
+
+def stop_server(pid: int) -> None:
+    try:
+        os.kill(int(pid), signal.SIGTERM)
+    except (OSError, ValueError):
+        return
+    for _ in range(40):
+        if not server_up():
+            return
+        time.sleep(0.25)
 
 
 def start_server(root: Path) -> subprocess.Popen:
@@ -58,7 +122,14 @@ def main(open_browser: bool = True, auto_update: bool = True) -> int:
         age = hours_since_last_update(cfg)
         if s.get("auto_update_on_open") and not is_running(cfg) and age is not None and age >= float(s.get("auto_update_hours", 20)):
             start_background_update(cfg)
+    if server_up():
+        pid = stale_server_pid(cfg.paths.root)
+        _log(cfg.paths.root, f"server up; outdated pid={pid}")
+        if pid:  # the code was updated since the server started: restart it so the new version shows up
+            stop_server(pid)
+            _log(cfg.paths.root, f"stopped {pid}; still up={server_up()}")
     if not server_up():
+        _log(cfg.paths.root, "starting server")
         start_server(cfg.paths.root)
         for _ in range(120):  # up to ~60 s on a cold start
             if server_up():
@@ -72,5 +143,27 @@ def main(open_browser: bool = True, auto_update: bool = True) -> int:
     return 0
 
 
+def _log(root: Path, msg: str) -> None:
+    try:
+        p = root / "data" / "logs" / "launcher.log"
+        p.parent.mkdir(parents=True, exist_ok=True)
+        with p.open("a", encoding="utf-8") as f:
+            f.write(f"{time.strftime('%Y-%m-%d %H:%M:%S')} {msg}\n")
+    except OSError:
+        pass
+
+
+def safe_main() -> int:
+    """Entry point for the desktop shortcut: never fails silently (writes data/logs/launcher.log)."""
+    import traceback
+    root = Path(os.environ.get("WAYPOINT_HOME") or Path.cwd())
+    try:
+        return main()
+    except Exception:
+        _log(root, traceback.format_exc())
+        _alert("O Waypoint não conseguiu abrir. Veja data\\logs\\launcher.log.")
+        return 1
+
+
 if __name__ == "__main__":
-    raise SystemExit(main())
+    raise SystemExit(safe_main())

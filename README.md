@@ -1,17 +1,19 @@
 <p align="center"><img src="assets/cover.png" alt="Waypoint — AI career radar" width="820"></p>
 
-# Waypoint — an LLM-powered career radar for data & AI roles
+# Waypoint — an LLM-powered career radar and personal planner
 
 [![tests](https://github.com/ErickMS18/waypoint/actions/workflows/tests.yml/badge.svg)](https://github.com/ErickMS18/waypoint/actions/workflows/tests.yml)
 ![python](https://img.shields.io/badge/python-3.11%2B-blue)
 ![license](https://img.shields.io/badge/license-MIT-green)
 
-**Waypoint answers one question with real data: _"what does the market actually ask for in the roles I want,
-what am I missing, and what should I study this week?"_**
+**Waypoint answers two questions with real data: _"what does the market actually ask for in the roles I want,
+and what am I missing?"_ and _"given my classes, internship, research and deadlines, what should I do right now?"_**
 
-It collects real job postings from public job-board APIs, uses an LLM to turn each posting into structured data
-(skills, required vs. nice-to-have, seniority), compares the market with your resume and builds a weekly study plan.
-Extraction quality is measured against a labeled gold set, and the numbers are in this README.
+- **v1 — career radar.** Collects real job postings from public job-board APIs, uses an LLM to turn each posting into
+  structured data (skills, required vs. nice-to-have, seniority), compares the market with your resume and builds a study plan.
+  Extraction quality is measured against a labeled gold set, and the numbers are in this README.
+- **v2 — personal orchestrator.** Combines that study plan with your projects and deadlines into a schedule for the week
+  and a single "do this now" for today, and re-plans automatically when something slips.
 
 > I built it for my own job search (AI/ML Engineer, Data Scientist, BI/Analytics Engineer, MLOps), and I use it every week.
 
@@ -29,23 +31,57 @@ Extraction quality is measured against a labeled gold set, and the numbers are i
 
 Small samples (MLOps, Analytics Engineer) are flagged as unstable in the app; they grow with each weekly refresh.
 
-<p align="center"><img src="assets/screenshots/market.png" alt="Market page: most requested skills, required vs nice-to-have" width="900"></p>
+<p align="center"><img src="assets/screenshots/today.png" alt="Today: what to do now, the rest of the day and the week at a glance" width="900"></p>
 
 ## What it does
 
 | | |
 |---|---|
+| **Today** | One primary action: the block to do *now*, with Done / Did part of it / Next. Progress for the day, an undo, and "free time today" that re-plans instantly. |
+| **Week** | Seven columns with every block of the week: deadlines first and spread out, study reserved, exploration protected. Edit your free time per weekday and add exceptions. |
+| **Projects** | College, internship, research and personal projects with deadlines and priorities. An LLM breaks a project into concrete tasks with hour estimates (template fallback without a key). |
 | **Market radar** | Most requested skills per role (required vs. nice-to-have), Brazil vs. international, seniority mix, rising skills over time. Click a bar to see the postings behind it. |
 | **Role comparison** | The same skills side by side across up to 3 roles, plus what is *typical* of each role. Useful to decide between, say, BI and Analytics Engineering. |
 | **Gap analysis** | Reads your resume (PII redacted first), scores your level per skill (0–3, editable) and ranks gaps by `demand × (1 − coverage)`. |
-| **Weekly plan** | Splits your weekly hours by focus weights (career / exploration / personal interests). Exploration time is protected; nothing is ever called "irrelevant": conflicts become explicit trade-offs. Check items off as you go. |
+| **Study plan** | Splits your study hours by focus weights (career / exploration / personal interests). Exploration time is protected; nothing is ever called "irrelevant": conflicts become explicit trade-offs. Suggested portfolio projects can be sent to Projects in one click. |
 | **Job explorer** | Filter postings by role, region, seniority and skills; open one to see what it asks for and what you still don't cover. |
 | **Role catalog** | Each role comes with a plain-language description. Turn roles on/off or create a custom role from a job title. |
-| **One-click app** | A desktop shortcut opens the app without a terminal; the **Update** button collects, extracts and re-plans in the background. |
+| **One-click app** | A desktop shortcut opens the app without a terminal; the **Update market** button collects, extracts and re-plans in the background. Dark/light theme and Portuguese/English, remembered between sessions. |
 
+<p align="center"><img src="assets/screenshots/week.png" alt="Week view: deadlines spread before the due date, study reserved" width="900"></p>
 <p align="center"><img src="assets/screenshots/compare.png" alt="Compare roles: AI/ML Engineer vs Data Scientist vs BI" width="900"></p>
 
-The interface is in Portuguese (it is my personal tool); code, docs and the evaluation are in English.
+## v2: how the orchestrator plans
+
+The scheduler is a small, deterministic and fully tested function (`src/waypoint/orchestrator.py`):
+
+1. **Capacity.** Free hours per weekday (plus one-off exceptions). Hours you already logged today are subtracted, so the plan for the rest of the day is always real.
+2. **Reserve study time** for the rest of the week, proportional to each day's free time, so deadlines cannot silently eat it.
+3. **Deadlines, earliest first.** A project's tasks are done *in order*; its remaining hours are spread over the days before the due date (no last-minute piles), with a maximum block per day.
+4. **Study blocks** go into the reserved time as focused blocks (≥ 1h when possible), on the days with the most room. Exploration is placed first because it is protected.
+5. **Projects without a deadline** fill what is left, by priority.
+6. **Nothing is dropped silently.** Hours that do not fit become a visible risk with two explicit options: lend this week's *career* or *interest* study hours to the deadline (exploration is never offered), or change your free time / the scope. Study that does not fit is reported too.
+7. **Re-planning.** Every log entry rebuilds the schedule. A daily snapshot detects what slipped yesterday ("1.5h left over from Monday — already spread over the week").
+
+Your projects, log and settings live in `data/orchestrator.json` (git-ignored). `waypoint today` prints the plan in the terminal.
+
+## UX: principles applied
+
+I treated the interface as part of the product, not decoration. What was applied, and where:
+
+| Principle | In the app |
+|---|---|
+| One primary action per screen (Hick's law) | Today opens on a single "Now" card with one primary button; everything else is secondary. |
+| Navigation by user goal | Sidebar grouped into *Plan*, *Market* and *You*, with a clear active state. |
+| Visibility of system status (Nielsen #1) | Live progress for background updates, toasts after every action, last-update stamp, day progress bar. |
+| User control and freedom (#3) | Undo for the last log entry, "Next" instead of forcing an order, two-step delete. |
+| Error prevention (#5) | Focus weights are normalized to 100 instead of blocking the save; dates can't be in the past; deleting asks for confirmation. |
+| Recognition over recall (#6) | Every area and role has icon + label + color; role descriptions and help text on non-obvious controls. |
+| Progressive disclosure | Task lists, edit forms and full tables live in expanders and popovers. |
+| Empty states that teach | Each empty screen says why it is empty and offers the next step as a button. |
+| Honest data | Small samples are flagged (fewer than 10 postings per role); trends need enough dated postings. |
+| Accessibility | Chart palettes validated per theme (contrast, color-vision deficiency separation), never color alone, visible keyboard focus. |
+| Personalization | Dark (default) and light themes; Portuguese and English. Both are remembered. |
 
 ## How it works
 
@@ -66,8 +102,12 @@ flowchart LR
     C --> M["Market stats<br/>demand = required + 0.5 · nice"]
     CV[Resume] --> R[Redact PII] --> P["Skill levels 0–3<br/>+ manual overrides"]
     M & P --> G["Gap = demand × (1 − coverage)"]
-    G --> PL["Weekly plan<br/>focus weights · protected exploration · trade-offs"]
-    M & G & PL --> UI["Streamlit app · Markdown report · charts"]
+    G --> PL["Study plan<br/>focus weights · protected exploration · trade-offs"]
+    PR["Projects & deadlines<br/>(LLM task breakdown)"] --> O
+    AV[Free time per day] --> O
+    PL --> O["v2 orchestrator<br/>EDF + spreading · reserved study · risks · re-planning"]
+    O --> UI["Streamlit app: Today · Week · Projects · Market"]
+    M & G --> UI
 ```
 
 ### Engineering decisions (the parts I'd talk about in an interview)
@@ -134,8 +174,8 @@ The repository contains only labels and posting ids/URLs (`eval/gold.jsonl`), ne
    the evaluation and the tests, and creates a **Waypoint** shortcut on the Desktop and in the Start menu.
 
 From then on, just open the **Waypoint** shortcut: it starts the app in the background (no terminal window),
-opens the browser and, if the data is more than a day old, refreshes it automatically. The **Atualizar tudo**
-button refreshes on demand; **Encerrar Waypoint** shuts it down.
+opens the browser and, if the market data is more than a day old, refreshes it automatically. The **Update market**
+button refreshes on demand; **Quit Waypoint** (under Options) shuts it down.
 
 ### Any OS, command line
 
@@ -148,6 +188,7 @@ waypoint init                    # creates data/, profile/, reports/ and .env
 waypoint profile path/to/resume.pdf
 waypoint update                  # collect → extract (LLM + baseline) → plan → reports
 waypoint ui                      # opens the app (runs in the background)
+waypoint today                   # today's plan in the terminal
 waypoint report --public         # market-only report, safe to share
 ```
 
@@ -197,12 +238,13 @@ src/waypoint/
   analysis/       market stats, gap, focus-weighted plan
   report/         Markdown report, charts, post numbers
   eval/           sampling, metrics, bootstrap CI, README update
-  ui/app.py       Streamlit app (8 pages)
+  orchestrator.py v2 scheduler: projects, availability, deadlines, study blocks, re-planning
+  ui/app.py       Streamlit app (10 pages), ui/theme.py design tokens, ui/i18n.py PT/EN strings
   updater.py      background "update everything" + status file
   launcher.py     one-click start (no terminal), used by the desktop shortcut
   resources/      skill taxonomy, role catalog, project templates, report template
 scripts/          Windows runner, shortcut target, cover generator
-tests/            54 offline tests with a fake network (pytest; CI on Ubuntu + Windows)
+tests/            69 offline tests with a fake network (pytest; CI on Ubuntu + Windows)
 ```
 
 ## Limitations
@@ -211,11 +253,13 @@ tests/            54 offline tests with a fake network (pytest; CI on Ubuntu + W
 - Shares are computed per posting, not per hire; one company with many similar openings can tilt the numbers (near-duplicates are removed, distinct openings are not).
 - Effort estimates in the plan are rough per-skill defaults, meant for ordering, not promises.
 - The gold set covers 2 of the 5 roles and awaits a human review pass.
+- The orchestrator plans in hours, not clock times; it does not read your calendar yet.
 
 ## Roadmap
 
 - Extend the gold set to BI, Analytics Engineer and MLOps postings; human review of all labels.
-- **v2 — personal orchestrator:** combine the plan with current projects and deadlines (college, internship, research) into a daily "what now", re-planning when something slips, with the same focus weights and protected exploration.
+- Orchestrator: calendar import (.ics) so classes and meetings shape the free time automatically.
+- Orchestrator: weekly review screen (planned vs. done per area) to calibrate estimates.
 
 ## License
 

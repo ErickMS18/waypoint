@@ -126,13 +126,14 @@ def emerging(jobs_df: pd.DataFrame, skills_df: pd.DataFrame, top: int = 8) -> pd
     rows = []
     tr = trends(jobs_df, skills_df)
     for _, r in tr[tr["delta_pp"] >= 5].head(top).iterrows():
-        rows.append({"skill_id": r["skill_id"], "name": r["name"], "why": f"subiu {r['delta_pp']:.0f} p.p. nas vagas recentes"})
+        rows.append({"skill_id": r["skill_id"], "name": r["name"], "kind": "rising", "value": float(r["delta_pp"]),
+                     "why": f"subiu {r['delta_pp']:.0f} p.p. nas vagas recentes"})
     t = skill_table(jobs_df, skills_df)
     other = t[t["skill_id"].str.startswith("other:") & (t["n_any"] >= 2)].head(top)
     for _, r in other.iterrows():
-        rows.append({"skill_id": r["skill_id"], "name": r["name"],
+        rows.append({"skill_id": r["skill_id"], "name": r["name"], "kind": "new", "value": float(r["n_any"]),
                      "why": f"aparece em {int(r['n_any'])} vagas e ainda não está na taxonomia"})
-    return pd.DataFrame(rows, columns=["skill_id", "name", "why"]).drop_duplicates("skill_id").head(top)
+    return pd.DataFrame(rows, columns=["skill_id", "name", "kind", "value", "why"]).drop_duplicates("skill_id").head(top)
 
 
 def cooccurrence(skills_df: pd.DataFrame, skill_id: str, top: int = 3) -> list[str]:

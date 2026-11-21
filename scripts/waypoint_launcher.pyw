@@ -7,6 +7,6 @@ ROOT = Path(__file__).resolve().parents[1]
 os.environ.setdefault("WAYPOINT_HOME", str(ROOT))
 sys.path.insert(0, str(ROOT / "src"))
 
-from waypoint.launcher import main  # noqa: E402
+from waypoint.launcher import safe_main  # noqa: E402
 
-raise SystemExit(main())
+raise SystemExit(safe_main())
